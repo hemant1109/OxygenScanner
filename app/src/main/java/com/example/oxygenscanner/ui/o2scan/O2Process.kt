@@ -276,7 +276,7 @@ class O2Process : Activity() {
         private const val REQUEST_CAMERA = 2
         private var previewHolder: SurfaceHolder? = null
         private var camera: Camera? = null
-        private var wakeLock: WakeLock? = null
+        var wakeLock: WakeLock? = null
 
         //Freq + timer variable
         private var startTime: Long = 0

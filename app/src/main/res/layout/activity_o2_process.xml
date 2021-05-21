@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg4"
+
     android:gravity="center"
     android:orientation="vertical"
     android:paddingLeft="64dp"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="30"
-            android:textColor="#034a66"
+            android:textColor="#FF018786"
             android:textStyle="bold" />
 
         <ProgressBar
