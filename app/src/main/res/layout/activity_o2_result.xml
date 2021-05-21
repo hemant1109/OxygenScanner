@@ -54,7 +54,7 @@
         android:textColor="@color/white"
         android:textStyle="bold|italic" />
 
-    <Button
+    <ImageButton
         android:id="@+id/SendO2"
         android:layout_width="match_parent"
         android:layout_height="75dp"

@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:hint="@string/prompt_password"
-            android:textColor="@color/black"
             android:imeActionLabel="@string/action_sign_in_short"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
@@ -51,7 +50,6 @@
             android:backgroundTint="@color/teal_700"
             android:enabled="false"
             android:layout_margin="10dp"
-
             android:text="@string/action_sign_in"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="@+id/password"
