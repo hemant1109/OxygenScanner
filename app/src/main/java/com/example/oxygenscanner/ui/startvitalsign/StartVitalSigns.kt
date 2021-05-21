@@ -39,18 +39,6 @@ class StartVitalSigns : AppCompatActivity() {
                 REQUEST_READ_PHONE_STATE
             )
         }
-        //If authorisation not granted for camera
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) //ask for authorisation
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.CAMERA),
-                REQUEST_CAMERA
-            )
-        //end
         val VS = findViewById<ImageButton>(R.id.StartVS)
         VS.setOnClickListener { v: View ->
             startO2ScanActivity()
@@ -79,7 +67,19 @@ class StartVitalSigns : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_READ_PHONE_STATE) {
             //activity
-            startO2ScanActivity()
+            //startO2ScanActivity()
+            //If authorisation not granted for camera
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) //ask for authorisation
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_CAMERA
+                )
+            //end
 
         } else if (requestCode == REQUEST_CAMERA) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

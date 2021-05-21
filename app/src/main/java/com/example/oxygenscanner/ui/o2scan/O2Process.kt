@@ -236,23 +236,24 @@ class O2Process : Activity() {
     private val surfaceCallback: SurfaceHolder.Callback = object : SurfaceHolder.Callback {
         override fun surfaceCreated(holder: SurfaceHolder) {
             try {
-                camera!!.setPreviewDisplay(previewHolder)
-                camera!!.setPreviewCallback(previewCallback)
+                camera?.setPreviewDisplay(previewHolder)
+                camera?.setPreviewCallback(previewCallback)
             } catch (t: Throwable) {
                 Log.e("PreviewDemoSurfcCallbck", "Exception in setPreviewDisplay()", t)
             }
         }
 
         override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-            val parameters = camera!!.parameters
-            parameters.flashMode = Camera.Parameters.FLASH_MODE_TORCH
-            val size = getSmallestPreviewSize(width, height, parameters)
-            if (size != null) {
-                parameters.setPreviewSize(size.width, size.height)
-                Log.d(TAG, "Using width=" + size.width + " height=" + size.height)
+            camera?.parameters?.let { parameters ->
+                parameters.flashMode = Camera.Parameters.FLASH_MODE_TORCH
+                val size = parameters.let { getSmallestPreviewSize(width, height, it) }
+                if (size != null) {
+                    parameters.setPreviewSize(size.width, size.height)
+                    Log.d(TAG, "Using width=" + size.width + " height=" + size.height)
+                }
+                camera?.parameters = parameters
+                camera?.startPreview()
             }
-            camera!!.parameters = parameters
-            camera!!.startPreview()
         }
 
         override fun surfaceDestroyed(holder: SurfaceHolder) {
