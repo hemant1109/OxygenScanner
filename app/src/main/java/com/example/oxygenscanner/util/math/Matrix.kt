@@ -1,21 +1,24 @@
-package com.example.oxygenscanner.util.Math;
+package com.example.oxygenscanner.util.math
+
+import kotlin.math.abs
+import kotlin.math.sqrt
+
 
 /**
- * The <code>Matrix</code> class provides some useful static functions to
+ * The `Matrix` class provides some useful static functions to
  * compute matrices.
  * Here two-dimensional arrays represent matrices and are taken as
  * columns of rows.
  *
  * @author Michael Lambertz
  */
-public class Matrix {
-
-    public static double[][] normalize(double[][] m) {
-        double[][] newM = new double[m.length][m[0].length];
-        for (int i = 0; i < m.length; i++) {
-            newM[i] = Vector.normalize(m[i]);
+object Matrix {
+    fun normalize(m: Array<DoubleArray>): Array<DoubleArray> {
+        val newM = Array(m.size) { DoubleArray(m[0].size) }
+        for (i in m.indices) {
+            newM[i] = Vector.normalize(m[i])
         }
-        return newM;
+        return newM
     }
 
     /**
@@ -24,14 +27,15 @@ public class Matrix {
      * @param inVector the vector
      * @return the resulting vector
      */
-    public static double[] sqrtVector(
-            double[] inVector) {
-        int m = inVector.length;
-        double[] outVector = new double[m];
-        for (int i = 0; i < m; ++i) {
-            outVector[i] = Math.sqrt(Math.abs(inVector[i]));
+    fun sqrtVector(
+        inVector: DoubleArray
+    ): DoubleArray {
+        val m = inVector.size
+        val outVector = DoubleArray(m)
+        for (i in 0 until m) {
+            outVector[i] = sqrt(abs(inVector[i]))
         }
-        return (outVector);
+        return outVector
     }
 
     /**
@@ -41,32 +45,34 @@ public class Matrix {
      * @param len desired length
      * @return the input string eventually suffixed with blanks
      */
-    private static String fillString(String in, int len) {
-        String out = in;
-        while (out.length() < len) {
-            out = " " + out;
+    private fun fillString(`in`: String, len: Int): String {
+        var out = `in`
+        while (out.length < len) {
+            out = " $out"
         }
-        return (out);
+        return out
     }
 
     /**
-     * Converts a matrix object into a <code>String</code> object
+     * Converts a matrix object into a `String` object
      * representing its content.
      *
      * @param matrix the matrix to be converted to a string
      * @return the string representing the content of the matrix
      */
-    public static String toString(double[][] matrix) {
-        String retVal = "";
-        int m = matrix.length;
-        int n = matrix[0].length;
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                retVal += fillString(Double.toString(matrix[i][j]), 24);
+    fun toString(matrix: Array<DoubleArray>): String {
+        var retVal = ""
+        val m = matrix.size
+        val n: Int = matrix[0].size
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                retVal += fillString(
+                    matrix[i][j].toString(), 24
+                )
             }
-            retVal += "\n";
+            retVal += "\n"
         }
-        return (retVal);
+        return retVal
     }
 
     /**
@@ -76,17 +82,17 @@ public class Matrix {
      * @param mat2 the second matrix
      * @return the resulting matrix
      */
-    public static double[][] add(double[][] mat1, double[][] mat2) {
-        int m = mat1.length;
-        int n = mat1[0].length;
-        double[][] matres = new double[m][];
-        for (int i = 0; i < m; ++i) {
-            matres[i] = new double[n];
-            for (int j = 0; j < n; ++j) {
-                matres[i][j] = mat1[i][j] + mat2[i][j];
+    fun add(mat1: Array<DoubleArray>, mat2: Array<DoubleArray>): Array<DoubleArray?> {
+        val m = mat1.size
+        val n: Int = mat1[0].size
+        val matres = arrayOfNulls<DoubleArray>(m)
+        for (i in 0 until m) {
+            matres[i] = DoubleArray(n)
+            for (j in 0 until n) {
+                matres[i]!![j] = mat1[i][j] + mat2[i][j]
             }
         }
-        return (matres);
+        return matres
     }
 
     /**
@@ -96,17 +102,17 @@ public class Matrix {
      * @param mat2 the second matrix
      * @return the resulting matrix
      */
-    public static double[][] sub(double[][] mat1, double[][] mat2) {
-        int m = mat1.length;
-        int n = mat1[0].length;
-        double[][] matres = new double[m][];
-        for (int i = 0; i < m; ++i) {
-            matres[i] = new double[n];
-            for (int j = 0; j < n; ++j) {
-                matres[i][j] = mat1[i][j] - mat2[i][j];
+    fun sub(mat1: Array<DoubleArray>, mat2: Array<DoubleArray>): Array<DoubleArray?> {
+        val m = mat1.size
+        val n: Int = mat1[0].size
+        val matres = arrayOfNulls<DoubleArray>(m)
+        for (i in 0 until m) {
+            matres[i] = DoubleArray(n)
+            for (j in 0 until n) {
+                matres[i]!![j] = mat1[i][j] - mat2[i][j]
             }
         }
-        return (matres);
+        return matres
     }
 
     /**
@@ -116,21 +122,21 @@ public class Matrix {
      * @param mat2 the second matrix
      * @return the resulting matrix
      */
-    public static double[][] mult(double[][] mat1, double[][] mat2) {
-        int m = mat1.length;
-        int n = mat1[0].length;
-        int o = mat2[0].length;
-        double[][] matres = new double[m][];
-        for (int i = 0; i < m; ++i) {
-            matres[i] = new double[o];
-            for (int j = 0; j < o; ++j) {
-                matres[i][j] = 0.0f;
-                for (int k = 0; k < n; ++k) {
-                    matres[i][j] += mat1[i][k] * mat2[k][j];
+    fun mult(mat1: Array<DoubleArray>, mat2: Array<DoubleArray>): Array<DoubleArray?> {
+        val m = mat1.size
+        val n: Int = mat1[0].size
+        val o: Int = mat2[0].size
+        val matres = arrayOfNulls<DoubleArray>(m)
+        for (i in 0 until m) {
+            matres[i] = DoubleArray(o)
+            for (j in 0 until o) {
+                matres[i]!![j] = 0.0
+                for (k in 0 until n) {
+                    matres[i]!![j] += mat1[i][k] * mat2[k][j]
                 }
             }
         }
-        return (matres);
+        return matres
     }
 
     /**
@@ -141,17 +147,17 @@ public class Matrix {
      * @param vec the vector
      * @return the resulting vector
      */
-    public static double[] mult(double[][] mat, double[] vec) {
-        int m = mat.length;
-        int n = mat[0].length;
-        double[] vecres = new double[m];
-        for (int i = 0; i < m; ++i) {
-            vecres[i] = 0.0f;
-            for (int j = 0; j < n; ++j) {
-                vecres[i] += mat[i][j] * vec[j];
+    fun mult(mat: Array<DoubleArray>, vec: DoubleArray): DoubleArray {
+        val m = mat.size
+        val n: Int = mat[0].size
+        val vecres = DoubleArray(m)
+        for (i in 0 until m) {
+            vecres[i] = 0.0
+            for (j in 0 until n) {
+                vecres[i] += mat[i][j] * vec[j]
             }
         }
-        return (vecres);
+        return vecres
     }
 
     /**
@@ -162,17 +168,17 @@ public class Matrix {
      * @param fac the factor to scale with
      * @return the scaled matrix
      */
-    public static double[][] scale(double[][] mat, double fac) {
-        int m = mat.length;
-        int n = mat[0].length;
-        double[][] res = new double[m][];
-        for (int i = 0; i < m; ++i) {
-            res[i] = new double[n];
-            for (int j = 0; j < n; ++j) {
-                res[i][j] = mat[i][j] * fac;
+    fun scale(mat: Array<DoubleArray>, fac: Double): Array<DoubleArray?> {
+        val m = mat.size
+        val n: Int = mat[0].size
+        val res = arrayOfNulls<DoubleArray>(m)
+        for (i in 0 until m) {
+            res[i] = DoubleArray(n)
+            for (j in 0 until n) {
+                res[i]!![j] = mat[i][j] * fac
             }
         }
-        return (res);
+        return res
     }
 
     /**
@@ -182,15 +188,15 @@ public class Matrix {
      * @param n number of desired columns
      * @return the random matrix
      */
-    public static double[][] random(int m, int n) {
-        double[][] matres = new double[m][];
-        for (int i = 0; i < m; ++i) {
-            matres[i] = new double[n];
-            for (int j = 0; j < n; ++j) {
-                matres[i][j] = Math.random();
+    fun random(m: Int, n: Int): Array<DoubleArray?> {
+        val matres = arrayOfNulls<DoubleArray>(m)
+        for (i in 0 until m) {
+            matres[i] = DoubleArray(n)
+            for (j in 0 until n) {
+                matres[i]!![j] = Math.random()
             }
         }
-        return (matres);
+        return matres
     }
 
     /**
@@ -200,12 +206,12 @@ public class Matrix {
      * @param n number of desired columns
      * @return the new matrix
      */
-    public static double[][] newMatrix(int m, int n) {
-        double[][] res = new double[m][];
-        for (int i = 0; i < m; ++i) {
-            res[i] = new double[n];
+    fun newMatrix(m: Int, n: Int): Array<DoubleArray?> {
+        val res = arrayOfNulls<DoubleArray>(m)
+        for (i in 0 until m) {
+            res[i] = DoubleArray(n)
         }
-        return (res);
+        return res
     }
 
     /**
@@ -217,15 +223,15 @@ public class Matrix {
      * @param val the element's value
      * @return the new matrix
      */
-    public static double[][] newMatrix(int m, int n, double val) {
-        double[][] res = new double[m][];
-        for (int i = 0; i < m; ++i) {
-            res[i] = new double[n];
-            for (int j = 0; j < n; ++j) {
-                res[i][j] = val;
+    fun newMatrix(m: Int, n: Int, `val`: Double): Array<DoubleArray?> {
+        val res = arrayOfNulls<DoubleArray>(m)
+        for (i in 0 until m) {
+            res[i] = DoubleArray(n)
+            for (j in 0 until n) {
+                res[i]!![j] = `val`
             }
         }
-        return (res);
+        return res
     }
 
     /**
@@ -235,17 +241,17 @@ public class Matrix {
      * @param mat the matrix to transpose
      * @return the transposed matrix
      */
-    public static double[][] transpose(double[][] mat) {
-        int m = mat.length;
-        int n = mat[0].length;
-        double[][] res = new double[n][];
-        for (int i = 0; i < n; ++i) {
-            res[i] = new double[m];
-            for (int j = 0; j < m; ++j) {
-                res[i][j] = mat[j][i];
+    fun transpose(mat: Array<DoubleArray>): Array<DoubleArray?> {
+        val m = mat.size
+        val n: Int = mat[0].size
+        val res = arrayOfNulls<DoubleArray>(n)
+        for (i in 0 until n) {
+            res[i] = DoubleArray(m)
+            for (j in 0 until m) {
+                res[i]!![j] = mat[j][i]
             }
         }
-        return (res);
+        return res
     }
 
     /**
@@ -254,17 +260,17 @@ public class Matrix {
      * @param mat the matrix to copy
      * @return the copied matrix
      */
-    public static double[][] clone(double[][] mat) {
-        int m = mat.length;
-        int n = mat[0].length;
-        double[][] res = new double[m][];
-        for (int i = 0; i < m; ++i) {
-            res[i] = new double[n];
-            for (int j = 0; j < n; ++j) {
-                res[i][j] = mat[i][j];
+    fun clone(mat: Array<DoubleArray>): Array<DoubleArray?> {
+        val m = mat.size
+        val n: Int = mat[0].size
+        val res = arrayOfNulls<DoubleArray>(m)
+        for (i in 0 until m) {
+            res[i] = DoubleArray(n)
+            for (j in 0 until n) {
+                res[i]!![j] = mat[i][j]
             }
         }
-        return (res);
+        return res
     }
 
     /**
@@ -273,12 +279,12 @@ public class Matrix {
      * @param n the number of rows and columns
      * @return the identity matrix
      */
-    public static double[][] identity(int n) {
-        double[][] res = newMatrix(n, n, 0.0);
-        for (int i = 0; i < n; ++i) {
-            res[i][i] = 1.0;
+    fun identity(n: Int): Array<DoubleArray?> {
+        val res = newMatrix(n, n, 0.0)
+        for (i in 0 until n) {
+            res[i]?.set(i, 1.0)
         }
-        return (res);
+        return res
     }
 
     /**
@@ -289,49 +295,47 @@ public class Matrix {
      * @param diag the diagonal vector
      * @return the resulting matrix
      */
-    public static double[][] diag(double[] diag) {
-
-        int n = diag.length;
-        double[][] res = newMatrix(n, n, 0.0);
-        for (int i = 0; i < n; ++i) {
-            res[i][i] = diag[i];
+    fun diag(diag: DoubleArray): Array<DoubleArray?> {
+        val n = diag.size
+        val res = newMatrix(n, n, 0.0)
+        for (i in 0 until n) {
+            res[i]?.set(i, diag[i])
         }
-
-        return (res);
+        return res
     }
 
     /**
-     * Returns the <code>j</code>'th column of a matrix as a
+     * Returns the `j`'th column of a matrix as a
      * new object.
      *
      * @param mat the matrix
      * @param j   the number of the column
      * @return a vector containing the column
      */
-    public static double[] getVecOfCol(double[][] mat, int j) {
-        int m = mat.length;
-        double[] res = new double[m];
-        for (int i = 0; i < m; ++i) {
-            res[i] = mat[i][j];
+    fun getVecOfCol(mat: Array<DoubleArray>, j: Int): DoubleArray {
+        val m = mat.size
+        val res = DoubleArray(m)
+        for (i in 0 until m) {
+            res[i] = mat[i][j]
         }
-        return (res);
+        return res
     }
 
     /**
-     * Returns the <code>i</code>'th row of a matrix as a
+     * Returns the `i`'th row of a matrix as a
      * new object.
      *
      * @param mat the matrix
      * @param i   the number of the row
      * @return a vector containing the row
      */
-    public static double[] getVecOfRow(double[][] mat, int i) {
-        int n = mat[0].length;
-        double[] res = new double[n];
-        for (int j = 0; j < n; ++j) {
-            res[j] = mat[i][j];
+    fun getVecOfRow(mat: Array<DoubleArray>, i: Int): DoubleArray {
+        val n: Int = mat[0].size
+        val res = DoubleArray(n)
+        for (j in 0 until n) {
+            res[j] = mat[i][j]
         }
-        return (res);
+        return res
     }
 
     /**
@@ -340,8 +344,8 @@ public class Matrix {
      * @param mat the matrix
      * @return the number of its columns
      */
-    public static int getNumOfColumns(double[][] mat) {
-        return (mat[0].length);
+    fun getNumOfColumns(mat: Array<DoubleArray>): Int {
+        return mat[0].size
     }
 
     /**
@@ -350,8 +354,8 @@ public class Matrix {
      * @param mat the matrix
      * @return the number of its rows
      */
-    public static int getNumOfRows(double[][] mat) {
-        return (mat.length);
+    fun getNumOfRows(mat: Array<DoubleArray>): Int {
+        return mat.size
     }
 
     /**
@@ -360,58 +364,51 @@ public class Matrix {
      * @param mat the input matrix
      * @return the squared matrix
      */
-    public static double[][] square(
-            double[][] mat) {
-        int m = Matrix.getNumOfRows(mat);
-        int n = Matrix.getNumOfColumns(mat);
-        double[][] res = Matrix.newMatrix(m, m);
-        for (int i = 0; i < m; ++i) {
-            res[i][i] = 0.0;
-            for (int k = 0; k < n; ++k) {
-                res[i][i] += mat[i][k] * mat[i][k];
+    fun square(
+        mat: Array<DoubleArray>
+    ): Array<DoubleArray?> {
+        val m = getNumOfRows(mat)
+        val n = getNumOfColumns(mat)
+        val res = newMatrix(m, m)
+        for (i in 0 until m) {
+            res[i]?.set(i, 0.0)
+            for (k in 0 until n) {
+                res[i]?.set(i, mat[i][k] * mat[i][k])
             }
-            for (int j = 0; j < i; ++j) {
-                res[i][j] = 0.0;
-                for (int k = 0; k < n; ++k) {
-                    res[i][j] += mat[i][k] * mat[j][k];
+            for (j in 0 until i) {
+                res[i]?.set(j, 0.0)
+                for (k in 0 until n) {
+                    res[i]?.set(j, mat[i][k] * mat[j][k])
                 }
-                res[j][i] = res[i][j];
+                res[i]?.get(j)?.let { res[j]?.set(i, it) }
             }
         }
-        return (res);
+        return res
     }
 
     // only work for 3 x 3 matrix
-    public static double[] invMatrix(double[] mat) {
-        int n = mat.length;
-        double[] res = new double[n];
-        double det = 0.0;
-        double predet = 0.0;
-
-        predet = mat[0];
-        for (int x = 1; x < 3; x++) {
-            predet = predet * mat[x];
+    fun invMatrix(mat: DoubleArray): DoubleArray {
+        val n = mat.size
+        val res = DoubleArray(n)
+        var det = 0.0
+        var predet = 0.0
+        predet = mat[0]
+        for (x in 1..2) {
+            predet = predet * mat[x]
         }
-
-
-        res[0] = mat[1] * mat[2];
-        res[1] = mat[0] * mat[2];
-        res[2] = mat[1] * mat[0];
-
-        if (predet != 0) {
-            det = 1 / predet;
-            for (int x = 0; x < 3; x++) {
-                res[x] = det * res[x];
+        res[0] = mat[1] * mat[2]
+        res[1] = mat[0] * mat[2]
+        res[2] = mat[1] * mat[0]
+        if (predet != 0.0) {
+            det = 1 / predet
+            for (x in 0..2) {
+                res[x] = det * res[x]
             }
         } else {
-            for (int x = 0; x < 3; x++) {
-                res[x] = 0 * res[x];
+            for (x in 0..2) {
+                res[x] = 0 * res[x]
             }
         }
-
-
-        return (res);
-
+        return res
     }
 }
-

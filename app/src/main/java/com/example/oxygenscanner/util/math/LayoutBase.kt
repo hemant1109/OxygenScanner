@@ -17,79 +17,83 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
+package com.example.oxygenscanner.util.math
 
-package com.example.oxygenscanner.util.Math;
 
-import org.apache.commons.math3.complex.Complex;
+
+import org.apache.commons.math3.complex.Complex
 
 /**
  * Digital/analogue filter coefficient storage space organising the
  * storage as PoleZeroPairs so that we have as always a 2nd order filter
  */
-public class LayoutBase {
+open class LayoutBase {
+    var numPoles: Int
+        private set
+    private val m_pair: Array<PoleZeroPair?>?
+    var normalW = 0.0
+        private set
+    var normalGain = 0.0
+        private set
 
-    private int m_numPoles;
-    private final PoleZeroPair[] m_pair;
-    private double m_normalW;
-    private double m_normalGain;
-
-    public LayoutBase(PoleZeroPair[] pairs) {
-        m_numPoles = pairs.length * 2;
-        m_pair = pairs;
+    constructor(pairs: Array<PoleZeroPair?>) {
+        numPoles = pairs.size * 2
+        m_pair = pairs
     }
 
-    public LayoutBase(int numPoles) {
-        m_numPoles = 0;
-        if ((numPoles % 2) == 1) {
-            m_pair = new PoleZeroPair[numPoles / 2 + 1];
+    constructor(numPoles: Int) {
+        this.numPoles = 0
+        m_pair = if (numPoles % 2 == 1) {
+            arrayOfNulls(numPoles / 2 + 1)
         } else {
-            m_pair = new PoleZeroPair[numPoles / 2];
+            arrayOfNulls(numPoles / 2)
         }
     }
 
-    public void reset() {
-        m_numPoles = 0;
+    fun reset() {
+        numPoles = 0
     }
 
-    public int getNumPoles() {
-        return m_numPoles;
+    fun add(pole: Complex?, zero: Complex?) {
+        m_pair!![numPoles / 2] = pole?.let {
+            if (zero != null) {
+                PoleZeroPair(it, zero)
+            } else
+                null
+        }
+        ++numPoles
     }
 
-    public void add(Complex pole, Complex zero) {
-        m_pair[m_numPoles / 2] = new PoleZeroPair(pole, zero);
-        ++m_numPoles;
+    fun addPoleZeroConjugatePairs(pole: Complex?, zero: Complex?) {
+        if (pole == null) println("LayoutBase addConj() pole == null")
+        if (zero == null) println("LayoutBase addConj() zero == null")
+        if (m_pair == null) println("LayoutBase addConj() m_pair == null")
+        m_pair!![numPoles / 2] = pole?.let {
+            if (zero != null) {
+                PoleZeroPair(
+                    it, zero, pole.conjugate(),
+                    zero.conjugate()
+                )
+            }else null
+        }
+        numPoles += 2
     }
 
-    public void addPoleZeroConjugatePairs(Complex pole, Complex zero) {
-        if (pole == null) System.out.println("LayoutBase addConj() pole == null");
-        if (zero == null) System.out.println("LayoutBase addConj() zero == null");
-        if (m_pair == null) System.out.println("LayoutBase addConj() m_pair == null");
-        m_pair[m_numPoles / 2] = new PoleZeroPair(pole, zero, pole.conjugate(),
-                zero.conjugate());
-        m_numPoles += 2;
+    fun add(poles: ComplexPair, zeros: ComplexPair) {
+        println("LayoutBase add() numPoles=" + numPoles)
+        m_pair!![numPoles / 2] = PoleZeroPair(
+            poles.first, zeros.first,
+            poles.second, zeros.second
+        )
+        numPoles += 2
     }
 
-    public void add(ComplexPair poles, ComplexPair zeros) {
-        System.out.println("LayoutBase add() numPoles=" + m_numPoles);
-        m_pair[m_numPoles / 2] = new PoleZeroPair(poles.first, zeros.first,
-                poles.second, zeros.second);
-        m_numPoles += 2;
+    fun getPair(pairIndex: Int): PoleZeroPair? {
+        return m_pair!![pairIndex]
     }
 
-    public PoleZeroPair getPair(int pairIndex) {
-        return m_pair[pairIndex];
-    }
-
-    public double getNormalW() {
-        return m_normalW;
-    }
-
-    public double getNormalGain() {
-        return m_normalGain;
-    }
-
-    public void setNormal(double w, double g) {
-        m_normalW = w;
-        m_normalGain = g;
+    fun setNormal(w: Double, g: Double) {
+        normalW = w
+        normalGain = g
     }
 }

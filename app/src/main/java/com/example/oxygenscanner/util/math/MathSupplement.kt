@@ -17,52 +17,48 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
+package com.example.oxygenscanner.util.math
 
-package com.example.oxygenscanner.util.Math;
+import org.apache.commons.math3.complex.Complex
 
-import org.apache.commons.math3.complex.Complex;
+
 
 /**
  * Useful math functions which come back over and over again
  */
-public class MathSupplement {
-
-    public static double doubleLn10 = 2.3025850929940456840179914546844;
-
-    public static Complex solve_quadratic_1(double a, double b, double c) {
-        return (new Complex(-b).add(new Complex(b * b - 4 * a * c, 0)).sqrt())
-                .divide(2. * a);
+object MathSupplement {
+    var doubleLn10 = 2.3025850929940456840179914546844
+    fun solve_quadratic_1(a: Double, b: Double, c: Double): Complex {
+        return Complex(-b).add(Complex(b * b - 4 * a * c, 0.0)).sqrt()
+            .divide(2.0 * a)
     }
 
-    public static Complex solve_quadratic_2(double a, double b, double c) {
-        return (new Complex(-b).subtract(new Complex(b * b - 4 * a * c, 0))
-                .sqrt()).divide(2. * a);
+    fun solve_quadratic_2(a: Double, b: Double, c: Double): Complex {
+        return Complex(-b).subtract(Complex(b * b - 4 * a * c, 0.0))
+            .sqrt().divide(2.0 * a)
     }
 
-    public static Complex adjust_imag(Complex c) {
-        if (Math.abs(c.getImaginary()) < 1e-30)
-            return new Complex(c.getReal(), 0);
-        else
-            return c;
+    fun adjust_imag(c: Complex): Complex {
+        return if (Math.abs(c.imaginary) < 1e-30) Complex(c.real, 0.0) else c
     }
 
-    public static Complex addmul(Complex c, double v, Complex c1) {
-        return new Complex(c.getReal() + v * c1.getReal(), c.getImaginary() + v
-                * c1.getImaginary());
+    fun addmul(c: Complex, v: Double, c1: Complex): Complex {
+        return Complex(
+            c.real + v * c1.real, c.imaginary + v
+                    * c1.imaginary
+        )
     }
 
-    public static Complex recip(Complex c) {
-        double n = 1.0 / (c.abs() * c.abs());
-
-        return new Complex(n * c.getReal(), n * c.getImaginary());
+    fun recip(c: Complex): Complex {
+        val n = 1.0 / (c.abs() * c.abs())
+        return Complex(n * c.real, n * c.imaginary)
     }
 
-    public static double asinh(double x) {
-        return Math.log(x + Math.sqrt(x * x + 1));
+    fun asinh(x: Double): Double {
+        return Math.log(x + Math.sqrt(x * x + 1))
     }
 
-    public static double acosh(double x) {
-        return Math.log(x + Math.sqrt(x * x - 1));
+    fun acosh(x: Double): Double {
+        return Math.log(x + Math.sqrt(x * x - 1))
     }
-
 }

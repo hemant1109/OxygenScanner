@@ -31,185 +31,127 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-package com.example.oxygenscanner.util.Math;
+package com.example.oxygenscanner.util.math
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.ThreadFactory
 
 /**
  * Concurrency utilities.
  *
  * @author Piotr Wendykier (piotr.wendykier@gmail.com)
  */
-public class ConcurrencyUtils {
+object ConcurrencyUtils {
     /**
      * Thread pool.
      */
-    private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool(new CustomThreadFactory(new CustomExceptionHandler()));
-
-    private static int THREADS_BEGIN_N_1D_FFT_2THREADS = 8192;
-
-    private static int THREADS_BEGIN_N_1D_FFT_4THREADS = 65536;
-
-    private static int THREADS_BEGIN_N_2D = 65536;
-
-    private static int THREADS_BEGIN_N_3D = 65536;
-
-    private static int NTHREADS = prevPow2(getNumberOfProcessors());
-
-    private ConcurrencyUtils() {
-
-    }
-
-    private static class CustomExceptionHandler implements Thread.UncaughtExceptionHandler {
-        public void uncaughtException(Thread t, Throwable e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private static class CustomThreadFactory implements ThreadFactory {
-        private static final ThreadFactory defaultFactory = Executors.defaultThreadFactory();
-
-        private final Thread.UncaughtExceptionHandler handler;
-
-        CustomThreadFactory(Thread.UncaughtExceptionHandler handler) {
-            this.handler = handler;
-        }
-
-        public Thread newThread(Runnable r) {
-            Thread t = defaultFactory.newThread(r);
-            t.setUncaughtExceptionHandler(handler);
-            return t;
-        }
-    }
+    private val THREAD_POOL =
+        Executors.newCachedThreadPool(CustomThreadFactory(CustomExceptionHandler()))
+    private var THREADS_BEGIN_N_1D_FFT_2THREADS = 8192
+    private var THREADS_BEGIN_N_1D_FFT_4THREADS = 65536
+    /**
+     * Returns the minimal size of 2D data for which threads are used.
+     *
+     * @return the minimal size of 2D data for which threads are used
+     */
+    /**
+     * Sets the minimal size of 2D data for which threads are used.
+     *
+     * @param n the minimal size of 2D data for which threads are used
+     */
+    var threadsBeginN_2D = 65536
+    /**
+     * Returns the minimal size of 3D data for which threads are used.
+     *
+     * @return the minimal size of 3D data for which threads are used
+     */
+    /**
+     * Sets the minimal size of 3D data for which threads are used.
+     *
+     * @param n the minimal size of 3D data for which threads are used
+     */
+    var threadsBeginN_3D = 65536
+    private var NTHREADS = prevPow2(numberOfProcessors)
 
     /**
      * Returns the number of available processors.
      *
      * @return number of available processors
      */
-    public static int getNumberOfProcessors() {
-        return Runtime.getRuntime().availableProcessors();
-    }
-
+    val numberOfProcessors: Int
+        get() = Runtime.getRuntime().availableProcessors()
     /**
      * Returns the current number of threads.
      *
      * @return the current number of threads.
      */
-    public static int getNumberOfThreads() {
-        return NTHREADS;
-    }
-
     /**
      * Sets the number of threads. If n is not a power-of-two number, then the
      * number of threads is set to the closest power-of-two number less than n.
      *
      * @param n
      */
-    public static void setNumberOfThreads(int n) {
-        NTHREADS = prevPow2(n);
-    }
-
+    var numberOfThreads: Int
+        get() = NTHREADS
+        set(n) {
+            NTHREADS = prevPow2(n)
+        }
     /**
      * Returns the minimal size of 1D data for which two threads are used.
      *
      * @return the minimal size of 1D data for which two threads are used
      */
-    public static int getThreadsBeginN_1D_FFT_2Threads() {
-        return THREADS_BEGIN_N_1D_FFT_2THREADS;
-    }
-
-    /**
-     * Returns the minimal size of 1D data for which four threads are used.
-     *
-     * @return the minimal size of 1D data for which four threads are used
-     */
-    public static int getThreadsBeginN_1D_FFT_4Threads() {
-        return THREADS_BEGIN_N_1D_FFT_4THREADS;
-    }
-
-    /**
-     * Returns the minimal size of 2D data for which threads are used.
-     *
-     * @return the minimal size of 2D data for which threads are used
-     */
-    public static int getThreadsBeginN_2D() {
-        return THREADS_BEGIN_N_2D;
-    }
-
-    /**
-     * Returns the minimal size of 3D data for which threads are used.
-     *
-     * @return the minimal size of 3D data for which threads are used
-     */
-    public static int getThreadsBeginN_3D() {
-        return THREADS_BEGIN_N_3D;
-    }
-
     /**
      * Sets the minimal size of 1D data for which two threads are used.
      *
      * @param n the minimal size of 1D data for which two threads are used
      */
-    public static void setThreadsBeginN_1D_FFT_2Threads(int n) {
-        if (n < 512) {
-            THREADS_BEGIN_N_1D_FFT_2THREADS = 512;
-        } else {
-            THREADS_BEGIN_N_1D_FFT_2THREADS = n;
+    var threadsBeginN_1D_FFT_2Threads: Int
+        get() = THREADS_BEGIN_N_1D_FFT_2THREADS
+        set(n) {
+            if (n < 512) {
+                THREADS_BEGIN_N_1D_FFT_2THREADS = 512
+            } else {
+                THREADS_BEGIN_N_1D_FFT_2THREADS = n
+            }
         }
-    }
-
+    /**
+     * Returns the minimal size of 1D data for which four threads are used.
+     *
+     * @return the minimal size of 1D data for which four threads are used
+     */
     /**
      * Sets the minimal size of 1D data for which four threads are used.
      *
      * @param n the minimal size of 1D data for which four threads are used
      */
-    public static void setThreadsBeginN_1D_FFT_4Threads(int n) {
-        if (n < 512) {
-            THREADS_BEGIN_N_1D_FFT_4THREADS = 512;
-        } else {
-            THREADS_BEGIN_N_1D_FFT_4THREADS = n;
+    var threadsBeginN_1D_FFT_4Threads: Int
+        get() = THREADS_BEGIN_N_1D_FFT_4THREADS
+        set(n) {
+            if (n < 512) {
+                THREADS_BEGIN_N_1D_FFT_4THREADS = 512
+            } else {
+                THREADS_BEGIN_N_1D_FFT_4THREADS = n
+            }
         }
-    }
-
-    /**
-     * Sets the minimal size of 2D data for which threads are used.
-     *
-     * @param n the minimal size of 2D data for which threads are used
-     */
-    public static void setThreadsBeginN_2D(int n) {
-        THREADS_BEGIN_N_2D = n;
-    }
-
-    /**
-     * Sets the minimal size of 3D data for which threads are used.
-     *
-     * @param n the minimal size of 3D data for which threads are used
-     */
-    public static void setThreadsBeginN_3D(int n) {
-        THREADS_BEGIN_N_3D = n;
-    }
 
     /**
      * Resets the minimal size of 1D data for which two and four threads are
      * used.
      */
-    public static void resetThreadsBeginN_FFT() {
-        THREADS_BEGIN_N_1D_FFT_2THREADS = 8192;
-        THREADS_BEGIN_N_1D_FFT_4THREADS = 65536;
+    fun resetThreadsBeginN_FFT() {
+        THREADS_BEGIN_N_1D_FFT_2THREADS = 8192
+        THREADS_BEGIN_N_1D_FFT_4THREADS = 65536
     }
 
     /**
      * Resets the minimal size of 2D and 3D data for which threads are used.
      */
-    public static void resetThreadsBeginN() {
-        THREADS_BEGIN_N_2D = 65536;
-        THREADS_BEGIN_N_3D = 65536;
+    fun resetThreadsBeginN() {
+        threadsBeginN_2D = 65536
+        threadsBeginN_3D = 65536
     }
 
     /**
@@ -218,19 +160,19 @@ public class ConcurrencyUtils {
      * @param x
      * @return the closest power-of-two number greater than or equal to x
      */
-    public static int nextPow2(int x) {
-        if (x < 1)
-            throw new IllegalArgumentException("x must be greater or equal 1");
-        if ((x & (x - 1)) == 0) {
-            return x; // x is already a power-of-two number 
+    fun nextPow2(x: Int): Int {
+        var x = x
+        require(x >= 1) { "x must be greater or equal 1" }
+        if (x and x - 1 == 0) {
+            return x // x is already a power-of-two number 
         }
-        x |= (x >>> 1);
-        x |= (x >>> 2);
-        x |= (x >>> 4);
-        x |= (x >>> 8);
-        x |= (x >>> 16);
-        x |= (x >>> 32);
-        return x + 1;
+        x = x or (x ushr 1)
+        x = x or (x ushr 2)
+        x = x or (x ushr 4)
+        x = x or (x ushr 8)
+        x = x or (x ushr 16)
+        x = x or (x ushr 32)
+        return x + 1
     }
 
     /**
@@ -239,10 +181,12 @@ public class ConcurrencyUtils {
      * @param x
      * @return the closest power-of-two number less then or equal to x
      */
-    public static int prevPow2(int x) {
-        if (x < 1)
-            throw new IllegalArgumentException("x must be greater or equal 1");
-        return (int) Math.pow(2, Math.floor(Math.log(x) / Math.log(2)));
+    fun prevPow2(x: Int): Int {
+        require(x >= 1) { "x must be greater or equal 1" }
+        return Math.pow(
+            2.0,
+            Math.floor(Math.log(x.toDouble()) / Math.log(2.0))
+        ).toInt()
     }
 
     /**
@@ -251,11 +195,8 @@ public class ConcurrencyUtils {
      * @param x
      * @return true if x is a power-of-two number
      */
-    public static boolean isPowerOf2(int x) {
-        if (x <= 0)
-            return false;
-        else
-            return (x & (x - 1)) == 0;
+    fun isPowerOf2(x: Int): Boolean {
+        return if (x <= 0) false else x and x - 1 == 0
     }
 
     /**
@@ -264,11 +205,11 @@ public class ConcurrencyUtils {
      *
      * @param millis
      */
-    public static void sleep(long millis) {
+    fun sleep(millis: Long) {
         try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.sleep(5000)
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
         }
     }
 
@@ -279,8 +220,8 @@ public class ConcurrencyUtils {
      * @param task a Runnable task for execution
      * @return a Future representing the task
      */
-    public static Future<?> submit(Runnable task) {
-        return THREAD_POOL.submit(task);
+    fun submit(task: Runnable?): Future<*> {
+        return THREAD_POOL.submit(task)
     }
 
     /**
@@ -288,16 +229,35 @@ public class ConcurrencyUtils {
      *
      * @param futures
      */
-    public static void waitForCompletion(Future<?>[] futures) {
-        int size = futures.length;
+    fun waitForCompletion(futures: Array<Future<*>?>) {
+        val size = futures.size
         try {
-            for (int j = 0; j < size; j++) {
-                futures[j].get();
+            for (j in 0 until size) {
+                futures[j]!!.get()
             }
-        } catch (ExecutionException ex) {
-            ex.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (ex: ExecutionException) {
+            ex.printStackTrace()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+    }
+
+    private class CustomExceptionHandler : Thread.UncaughtExceptionHandler {
+        override fun uncaughtException(t: Thread, e: Throwable) {
+            e.printStackTrace()
+        }
+    }
+
+    private class CustomThreadFactory(private val handler: Thread.UncaughtExceptionHandler) :
+        ThreadFactory {
+        override fun newThread(r: Runnable): Thread {
+            val t = defaultFactory.newThread(r)
+            t.uncaughtExceptionHandler = handler
+            return t
+        }
+
+        companion object {
+            private val defaultFactory = Executors.defaultThreadFactory()
         }
     }
 }

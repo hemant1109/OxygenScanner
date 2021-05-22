@@ -17,53 +17,48 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
+package com.example.oxygenscanner.util.math
 
-
-package com.example.oxygenscanner.util.Math;
-
-import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.complex.Complex
 
 /**
  * Transforms from an analogue lowpass filter to a digital lowpass filter
  */
-public class LowPassTransform {
-
-    private final double f;
-
-    private Complex transform(Complex c) {
-        if (c.isInfinite())
-            return new Complex(-1, 0);
+class LowPassTransform(fc: Double, digital: LayoutBase, analog: LayoutBase) {
+    private val f: Double
+    private fun transform(c: Complex): Complex {
+        var c = c
+        if (c.isInfinite) return Complex(-1.0, 0.0)
 
         // frequency transform
-        c = c.multiply(f);
-
-        Complex one = new Complex(1, 0);
+        c = c.multiply(f)
+        val one = Complex(1.0, 0.0)
 
         // bilinear low pass transform
-        return (one.add(c)).divide(one.subtract(c));
+        return one.add(c).divide(one.subtract(c))
     }
 
-    public LowPassTransform(double fc, LayoutBase digital, LayoutBase analog) {
-        digital.reset();
+    init {
+        digital.reset()
 
         // prewarp
-        f = Math.tan(Math.PI * fc);
-
-        int numPoles = analog.getNumPoles();
-        int pairs = numPoles / 2;
-        for (int i = 0; i < pairs; ++i) {
-            PoleZeroPair pair = analog.getPair(i);
-            digital.addPoleZeroConjugatePairs(transform(pair.poles.first),
-                    transform(pair.zeros.first));
+        f = Math.tan(Math.PI * fc)
+        val numPoles: Int = analog.numPoles
+        val pairs = numPoles / 2
+        for (i in 0 until pairs) {
+            val pair: PoleZeroPair? = analog.getPair(i)
+            digital.addPoleZeroConjugatePairs(
+                pair?.poles?.first?.let { transform(it) },
+                pair?.zeros?.first?.let { transform(it) }
+            )
         }
-
-        if ((numPoles & 1) == 1) {
-            PoleZeroPair pair = analog.getPair(pairs);
-            digital.add(transform(pair.poles.first),
-                    transform(pair.zeros.first));
+        if (numPoles and 1 == 1) {
+            val pair: PoleZeroPair? = analog.getPair(pairs)
+            digital.add(
+                pair?.poles?.first?.let { transform(it) },
+                pair?.zeros?.first?.let { transform(it) }
+            )
         }
-
-        digital.setNormal(analog.getNormalW(), analog.getNormalGain());
+        digital.setNormal(analog.normalW, analog.normalGain)
     }
-
 }

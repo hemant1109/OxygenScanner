@@ -2,8 +2,6 @@ package com.example.oxygenscanner.ui.login
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -104,7 +102,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun startVitalSignActivity() {
         val i = Intent(this, StartVitalSigns::class.java)
-        i.putExtra("Usr",username.text.toString())
+        i.putExtra("Usr", username.text.toString())
         startActivity(i)
         finish()
     }
@@ -115,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
         // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
-            "$welcome",
+            "$welcome $displayName",
             Toast.LENGTH_LONG
         ).show()
     }

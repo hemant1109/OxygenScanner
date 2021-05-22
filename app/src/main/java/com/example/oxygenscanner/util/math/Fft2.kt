@@ -1,41 +1,36 @@
-package com.example.oxygenscanner.util.Math;
+package com.example.oxygenscanner.util.math
 
-public class Fft2 {
+import com.example.oxygenscanner.util.math.Butterworth
+import com.example.oxygenscanner.util.math.DoubleFft1d
 
-    public static double FFT(Double[] in, int size, double samplingFrequency) {
-        double temp = 0;
-        double POMP = 0;
-        double frequency;
-        double[] output = new double[2 * size];
-        Butterworth butterworth = new Butterworth();
-        butterworth.bandPass(2, samplingFrequency, 0.2, 0.3);
 
-        for (int i = 0; i < output.length; i++)
-            output[i] = 0;
 
-        for (int x = 0; x < size; x++) {
-            output[x] = in[x];
+object Fft2 {
+    fun fFT(`in`: Array<Double>, size: Int, samplingFrequency: Double): Double {
+        var temp = 0.0
+        var POMP = 0.0
+        val output = DoubleArray(2 * size)
+        val butterworth = Butterworth()
+        butterworth.bandPass(2, samplingFrequency, 0.2, 0.3)
+        for (i in output.indices) output[i] = 0.0
+        for (x in 0 until size) {
+            output[x] = `in`[x]
         }
-
-        DoubleFft1d fft = new DoubleFft1d(size);
-        fft.realForward(output);
-
-        for (int x = 0; x < 2 * size; x++) {
-            output[x] = butterworth.filter(output[x]);
+        val fft = DoubleFft1d(size)
+        fft.realForward(output)
+        for (x in 0 until 2 * size) {
+            output[x] = butterworth.filter(output[x])
         }
-
-        for (int x = 0; x < 2 * size; x++) {
-            output[x] = Math.abs(output[x]);
+        for (x in 0 until 2 * size) {
+            output[x] = Math.abs(output[x])
         }
-
-        for (int p = 12; p < size; p++) {
+        for (p in 12 until size) {
             if (temp < output[p]) {
-                temp = output[p];
-                POMP = p;
+                temp = output[p]
+                POMP = p.toDouble()
             }
         }
-
-        frequency = POMP * samplingFrequency / (2 * size);
-        return frequency;
+        val frequency: Double = POMP * samplingFrequency / (2 * size)
+        return frequency
     }
 }

@@ -17,51 +17,41 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
+package com.example.oxygenscanner.util.math
 
-
-package com.example.oxygenscanner.util.Math;
-
-import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.complex.Complex
 
 /**
  * A complex pair
  */
-public class ComplexPair {
+class ComplexPair {
+    var first: Complex
+    var second: Complex
 
-    public Complex first;
-    public Complex second;
-
-    ComplexPair(Complex c1,
-                Complex c2) {
-        first = c1;
-        second = c2;
+    internal constructor(
+        c1: Complex,
+        c2: Complex
+    ) {
+        first = c1
+        second = c2
     }
 
-    ComplexPair(Complex c1) {
-        first = c1;
-        second = new Complex(0, 0);
+    internal constructor(c1: Complex) {
+        first = c1
+        second = Complex(0.0, 0.0)
     }
 
-    boolean isConjugate() {
-        return second.equals(first.conjugate());
-    }
-
-    boolean isReal() {
-        return first.getImaginary() == 0 && second.getImaginary() == 0;
-    }
+    val isConjugate: Boolean
+        get() = second == first.conjugate()
+    val isReal: Boolean
+        get() = first.imaginary == 0.0 && second.imaginary == 0.0
 
     // Returns true if this is either a conjugate pair,
     // or a pair of reals where neither is zero.
-    boolean isMatchedPair() {
-        if (first.getImaginary() != 0)
-            return second.equals(first.conjugate());
-        else
-            return second.getImaginary() == 0 &&
-                    second.getReal() != 0 &&
-                    first.getReal() != 0;
-    }
+    val isMatchedPair: Boolean
+        get() = if (first.imaginary != 0.0) second == first.conjugate() else second.imaginary == 0.0 && second.real != 0.0 && first.real != 0.0
 
-    boolean is_nan() {
-        return first.isNaN() || second.isNaN();
+    fun is_nan(): Boolean {
+        return first.isNaN || second.isNaN
     }
 }

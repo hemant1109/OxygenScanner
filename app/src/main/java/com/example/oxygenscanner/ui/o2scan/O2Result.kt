@@ -1,66 +1,60 @@
-package com.example.oxygenscanner.ui.o2scan;
+package com.example.oxygenscanner.ui.o2scan
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.oxygenscanner.R
+import com.example.oxygenscanner.ui.login.LoginActivity
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.oxygenscanner.R;
-import com.example.oxygenscanner.ui.login.LoginActivity;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-public class O2Result extends AppCompatActivity {
-
-    private String user, Date;
-    DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault());
-    Date today = Calendar.getInstance().getTime();
-    int O2;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_o2_result);
-
-        Date = df.format(today);
-        TextView RO2 = this.findViewById(R.id.O2R);
-        ImageButton SO2 = this.findViewById(R.id.SendO2);
-
-        Bundle bundle = getIntent().getExtras();
+class O2Result : AppCompatActivity() {
+    private var user: String? = null
+    private var Date: String? = null
+    var df: DateFormat = SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault())
+    var today = Calendar.getInstance().time
+    var O2 = 0
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_o2_result)
+        Date = df.format(today)
+        val RO2 = findViewById<TextView>(R.id.O2R)
+        val SO2 = findViewById<ImageButton>(R.id.SendO2)
+        val bundle = intent.extras
         if (bundle != null) {
-            O2 = bundle.getInt("O2R");
-            user = bundle.getString("Usr");
-            RO2.setText(String.valueOf(O2));
+            O2 = bundle.getInt("O2R")
+            user = bundle.getString("Usr")
+            RO2.text = O2.toString()
         }
-
-        SO2.setOnClickListener(v -> {
-            Intent i = new Intent(Intent.ACTION_SEND);
-            i.setType("message/rfc822");
-            i.putExtra(Intent.EXTRA_EMAIL, new String[]{"recipient@example.com"});
-            i.putExtra(Intent.EXTRA_SUBJECT, "Health Watcher");
-            i.putExtra(Intent.EXTRA_TEXT, user + "'s Oxygen Saturation Level " + "\n" + " at " + Date + " is :   " + O2);
+        SO2.setOnClickListener { v: View? ->
+            val i = Intent(Intent.ACTION_SEND)
+            i.type = "message/rfc822"
+            i.putExtra(Intent.EXTRA_EMAIL, arrayOf("recipient@example.com"))
+            i.putExtra(Intent.EXTRA_SUBJECT, "Health Watcher")
+            i.putExtra(Intent.EXTRA_TEXT, "$user's Oxygen Saturation Level \n at $Date is :   $O2")
             try {
-                startActivity(Intent.createChooser(i, "Send mail..."));
-            } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(O2Result.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                startActivity(Intent.createChooser(i, "Send mail..."))
+            } catch (ex: ActivityNotFoundException) {
+                Toast.makeText(
+                    this@O2Result,
+                    "There are no email clients installed.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        });
-
+        }
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(O2Result.this, LoginActivity.class);
-        i.putExtra("Usr", user);
-        startActivity(i);
-        finish();
-        super.onBackPressed();
+    override fun onBackPressed() {
+        val i = Intent(this@O2Result, LoginActivity::class.java)
+        i.putExtra("Usr", user)
+        startActivity(i)
+        finish()
+        super.onBackPressed()
     }
 }

@@ -17,8 +17,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.oxygenscanner.databinding.ActivityO2ProcessBinding
 import com.example.oxygenscanner.ui.login.LoginActivity
-import com.example.oxygenscanner.util.Math.Fft
 import com.example.oxygenscanner.util.imageprocessing.ImageProcessing.decodeYUV420SPtoRedBlueGreenAvg
+import com.example.oxygenscanner.util.math.Fft
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ceil
@@ -190,7 +190,7 @@ class O2Process : Activity() {
             SamplingFreq = counter / totalTimeInSecs
             val Red = RedAvgList.toTypedArray()
             val Blue = BlueAvgList.toTypedArray()
-            val HRFreq = Fft.FFT(Red, counter, SamplingFreq)
+            val HRFreq = Fft.fFT(Red, counter, SamplingFreq)
             val bpm: Double = ceil(HRFreq * 60)
             val meanr = sumred / counter
             val meanb = sumblue / counter

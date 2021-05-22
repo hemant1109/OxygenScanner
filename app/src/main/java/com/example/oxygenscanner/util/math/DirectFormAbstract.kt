@@ -17,25 +17,25 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
+package com.example.oxygenscanner.util.math
 
-package com.example.oxygenscanner.util.Math;
 
 /**
  * Abstract form of the a filter which can have different state variables
- * <p>
+ *
+ *
  * Direct form I or II is derived from it
  */
-public abstract class DirectFormAbstract {
+abstract class DirectFormAbstract {
+    abstract fun reset()
+    abstract fun process1(`in`: Double, s: Biquad?): Double
 
-    public DirectFormAbstract() {
-        reset();
+    companion object {
+        const val DIRECT_FORM_I = 0
+        const val DIRECT_FORM_II = 1
     }
 
-    public abstract void reset();
-
-    public abstract double process1(double in, Biquad s);
-
-    public static final int DIRECT_FORM_I = 0;
-    public static final int DIRECT_FORM_II = 1;
-
+    init {
+        reset()
+    }
 }

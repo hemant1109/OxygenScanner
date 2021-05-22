@@ -17,11 +17,10 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
+package com.example.oxygenscanner.util.math
 
-package com.example.oxygenscanner.util.Math;
-
-import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.complex.ComplexUtils;
+import org.apache.commons.math3.complex.Complex
+import org.apache.commons.math3.complex.ComplexUtils
 
 /**
  * User facing class which contains all the methods the user uses
@@ -31,45 +30,41 @@ import org.apache.commons.math3.complex.ComplexUtils;
  * low-,high-,band-, or stopband filters. For example:
  * butterworth.bandPass(2,250,50,5);
  */
-public class Butterworth extends Cascade {
-
-    class AnalogLowPass extends LayoutBase {
-
-        private final int nPoles;
-
-        public AnalogLowPass(int _nPoles) {
-            super(_nPoles);
-            nPoles = _nPoles;
-            setNormal(0, 1);
+class Butterworth : Cascade() {
+    internal inner class AnalogLowPass(private val nPoles: Int) : LayoutBase(
+        nPoles
+    ) {
+        fun design() {
+            reset()
+            val n2 = (2 * nPoles).toDouble()
+            val pairs = nPoles / 2
+            for (i in 0 until pairs) {
+                val c = ComplexUtils.polar2Complex(
+                    1.0, Math.PI / 2.0
+                            + (2 * i + 1) * Math.PI / n2
+                )
+                addPoleZeroConjugatePairs(c, Complex.INF)
+            }
+            if (nPoles and 1 == 1) add(Complex(-1.0), Complex.INF)
         }
 
-        public void design() {
-            reset();
-            double n2 = 2 * nPoles;
-            int pairs = nPoles / 2;
-            for (int i = 0; i < pairs; ++i) {
-                Complex c = ComplexUtils.polar2Complex(1F, Math.PI / 2.0
-                        + (2 * i + 1) * Math.PI / n2);
-                addPoleZeroConjugatePairs(c, Complex.INF);
-            }
-
-            if ((nPoles & 1) == 1)
-                add(new Complex(-1), Complex.INF);
+        init {
+            setNormal(0.0, 1.0)
         }
     }
 
-    private void setupLowPass(int order, double sampleRate,
-                              double cutoffFrequency, int directFormType) {
-
-        AnalogLowPass m_analogProto = new AnalogLowPass(order);
-        m_analogProto.design();
-
-        LayoutBase m_digitalProto = new LayoutBase(order);
-
-        new LowPassTransform(cutoffFrequency / sampleRate, m_digitalProto,
-                m_analogProto);
-
-        setLayout(m_digitalProto, directFormType);
+    private fun setupLowPass(
+        order: Int, sampleRate: Double,
+        cutoffFrequency: Double, directFormType: Int
+    ) {
+        val m_analogProto: AnalogLowPass = AnalogLowPass(order)
+        m_analogProto.design()
+        val m_digitalProto = LayoutBase(order)
+        LowPassTransform(
+            cutoffFrequency / sampleRate, m_digitalProto,
+            m_analogProto
+        )
+        setLayout(m_digitalProto, directFormType)
     }
 
     /**
@@ -79,9 +74,11 @@ public class Butterworth extends Cascade {
      * @param sampleRate      The sampling rate of the system
      * @param cutoffFrequency the cutoff frequency
      */
-    public void lowPass(int order, double sampleRate, double cutoffFrequency) {
-        setupLowPass(order, sampleRate, cutoffFrequency,
-                DirectFormAbstract.DIRECT_FORM_II);
+    fun lowPass(order: Int, sampleRate: Double, cutoffFrequency: Double) {
+        setupLowPass(
+            order, sampleRate, cutoffFrequency,
+            DirectFormAbstract.Companion.DIRECT_FORM_II
+        )
     }
 
     /**
@@ -91,26 +88,27 @@ public class Butterworth extends Cascade {
      * @param sampleRate      The sampling rate of the system
      * @param cutoffFrequency The cutoff frequency
      * @param directFormType  The filter topology. This is either
-     *                        DirectFormAbstract.DIRECT_FORM_I or DIRECT_FORM_II
+     * DirectFormAbstract.DIRECT_FORM_I or DIRECT_FORM_II
      */
-    public void lowPass(int order, double sampleRate, double cutoffFrequency,
-                        int directFormType) {
-        setupLowPass(order, sampleRate, cutoffFrequency, directFormType);
+    fun lowPass(
+        order: Int, sampleRate: Double, cutoffFrequency: Double,
+        directFormType: Int
+    ) {
+        setupLowPass(order, sampleRate, cutoffFrequency, directFormType)
     }
 
-
-    private void setupHighPass(int order, double sampleRate,
-                               double cutoffFrequency, int directFormType) {
-
-        AnalogLowPass m_analogProto = new AnalogLowPass(order);
-        m_analogProto.design();
-
-        LayoutBase m_digitalProto = new LayoutBase(order);
-
-        new HighPassTransform(cutoffFrequency / sampleRate, m_digitalProto,
-                m_analogProto);
-
-        setLayout(m_digitalProto, directFormType);
+    private fun setupHighPass(
+        order: Int, sampleRate: Double,
+        cutoffFrequency: Double, directFormType: Int
+    ) {
+        val m_analogProto: AnalogLowPass = AnalogLowPass(order)
+        m_analogProto.design()
+        val m_digitalProto = LayoutBase(order)
+        HighPassTransform(
+            cutoffFrequency / sampleRate, m_digitalProto,
+            m_analogProto
+        )
+        setLayout(m_digitalProto, directFormType)
     }
 
     /**
@@ -121,9 +119,11 @@ public class Butterworth extends Cascade {
      * @param cutoffFrequency Cutoff of the system
      * @param directFormType  The filter topology. See DirectFormAbstract.
      */
-    public void highPass(int order, double sampleRate, double cutoffFrequency,
-                         int directFormType) {
-        setupHighPass(order, sampleRate, cutoffFrequency, directFormType);
+    fun highPass(
+        order: Int, sampleRate: Double, cutoffFrequency: Double,
+        directFormType: Int
+    ) {
+        setupHighPass(order, sampleRate, cutoffFrequency, directFormType)
     }
 
     /**
@@ -133,24 +133,25 @@ public class Butterworth extends Cascade {
      * @param sampleRate      Sampling rate of the system
      * @param cutoffFrequency Cutoff of the system
      */
-    public void highPass(int order, double sampleRate, double cutoffFrequency) {
-        setupHighPass(order, sampleRate, cutoffFrequency,
-                DirectFormAbstract.DIRECT_FORM_II);
+    fun highPass(order: Int, sampleRate: Double, cutoffFrequency: Double) {
+        setupHighPass(
+            order, sampleRate, cutoffFrequency,
+            DirectFormAbstract.Companion.DIRECT_FORM_II
+        )
     }
 
-
-    private void setupBandStop(int order, double sampleRate,
-                               double centerFrequency, double widthFrequency, int directFormType) {
-
-        AnalogLowPass m_analogProto = new AnalogLowPass(order);
-        m_analogProto.design();
-
-        LayoutBase m_digitalProto = new LayoutBase(order * 2);
-
-        new BandStopTransform(centerFrequency / sampleRate, widthFrequency
-                / sampleRate, m_digitalProto, m_analogProto);
-
-        setLayout(m_digitalProto, directFormType);
+    private fun setupBandStop(
+        order: Int, sampleRate: Double,
+        centerFrequency: Double, widthFrequency: Double, directFormType: Int
+    ) {
+        val m_analogProto: AnalogLowPass = AnalogLowPass(order)
+        m_analogProto.design()
+        val m_digitalProto = LayoutBase(order * 2)
+        BandStopTransform(
+            centerFrequency / sampleRate, widthFrequency
+                    / sampleRate, m_digitalProto, m_analogProto
+        )
+        setLayout(m_digitalProto, directFormType)
     }
 
     /**
@@ -161,10 +162,14 @@ public class Butterworth extends Cascade {
      * @param centerFrequency Center frequency
      * @param widthFrequency  Width of the notch
      */
-    public void bandStop(int order, double sampleRate, double centerFrequency,
-                         double widthFrequency) {
-        setupBandStop(order, sampleRate, centerFrequency, widthFrequency,
-                DirectFormAbstract.DIRECT_FORM_II);
+    fun bandStop(
+        order: Int, sampleRate: Double, centerFrequency: Double,
+        widthFrequency: Double
+    ) {
+        setupBandStop(
+            order, sampleRate, centerFrequency, widthFrequency,
+            DirectFormAbstract.Companion.DIRECT_FORM_II
+        )
     }
 
     /**
@@ -176,26 +181,28 @@ public class Butterworth extends Cascade {
      * @param widthFrequency  Width of the notch
      * @param directFormType  The filter topology
      */
-    public void bandStop(int order, double sampleRate, double centerFrequency,
-                         double widthFrequency, int directFormType) {
-        setupBandStop(order, sampleRate, centerFrequency, widthFrequency,
-                directFormType);
+    fun bandStop(
+        order: Int, sampleRate: Double, centerFrequency: Double,
+        widthFrequency: Double, directFormType: Int
+    ) {
+        setupBandStop(
+            order, sampleRate, centerFrequency, widthFrequency,
+            directFormType
+        )
     }
 
-
-    private void setupBandPass(int order, double sampleRate,
-                               double centerFrequency, double widthFrequency, int directFormType) {
-
-        AnalogLowPass m_analogProto = new AnalogLowPass(order);
-        m_analogProto.design();
-
-        LayoutBase m_digitalProto = new LayoutBase(order * 2);
-
-        new BandPassTransform(centerFrequency / sampleRate, widthFrequency
-                / sampleRate, m_digitalProto, m_analogProto);
-
-        setLayout(m_digitalProto, directFormType);
-
+    private fun setupBandPass(
+        order: Int, sampleRate: Double,
+        centerFrequency: Double, widthFrequency: Double, directFormType: Int
+    ) {
+        val m_analogProto: AnalogLowPass = AnalogLowPass(order)
+        m_analogProto.design()
+        val m_digitalProto = LayoutBase(order * 2)
+        BandPassTransform(
+            centerFrequency / sampleRate, widthFrequency
+                    / sampleRate, m_digitalProto, m_analogProto
+        )
+        setLayout(m_digitalProto, directFormType)
     }
 
     /**
@@ -206,10 +213,14 @@ public class Butterworth extends Cascade {
      * @param centerFrequency Center frequency
      * @param widthFrequency  Width of the notch
      */
-    public void bandPass(int order, double sampleRate, double centerFrequency,
-                         double widthFrequency) {
-        setupBandPass(order, sampleRate, centerFrequency, widthFrequency,
-                DirectFormAbstract.DIRECT_FORM_II);
+    fun bandPass(
+        order: Int, sampleRate: Double, centerFrequency: Double,
+        widthFrequency: Double
+    ) {
+        setupBandPass(
+            order, sampleRate, centerFrequency, widthFrequency,
+            DirectFormAbstract.Companion.DIRECT_FORM_II
+        )
     }
 
     /**
@@ -221,10 +232,13 @@ public class Butterworth extends Cascade {
      * @param widthFrequency  Width of the notch
      * @param directFormType  The filter topology (see DirectFormAbstract)
      */
-    public void bandPass(int order, double sampleRate, double centerFrequency,
-                         double widthFrequency, int directFormType) {
-        setupBandPass(order, sampleRate, centerFrequency, widthFrequency,
-                directFormType);
+    fun bandPass(
+        order: Int, sampleRate: Double, centerFrequency: Double,
+        widthFrequency: Double, directFormType: Int
+    ) {
+        setupBandPass(
+            order, sampleRate, centerFrequency, widthFrequency,
+            directFormType
+        )
     }
-
 }

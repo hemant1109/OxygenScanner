@@ -17,116 +17,121 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
+package com.example.oxygenscanner.util.math
 
-
-package com.example.oxygenscanner.util.Math;
-
-import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.complex.ComplexUtils;
+import org.apache.commons.math3.complex.Complex
+import org.apache.commons.math3.complex.ComplexUtils
 
 /**
  * The mother of all filters. It contains the coefficients of all
  * filter stages as a sequence of 2nd order filters and the states
  * of the 2nd order filters which also imply if it's direct form I or II
  */
-public class Cascade {
-
+open class Cascade {
     // coefficients
-    private Biquad[] m_biquads;
+    private var m_biquads: Array<Biquad?>? = null
 
     // the states of the filters
-    private DirectFormAbstract[] m_states;
+    private var m_states: Array<DirectFormAbstract?>? = null
 
     // number of biquads in the system
-    private int m_numBiquads;
-
-    private int numPoles;
-
-    public int getNumBiquads() {
-        return m_numBiquads;
+    var numBiquads = 0
+        private set
+    private var numPoles = 0
+    fun getBiquad(index: Int): Biquad? {
+        return m_biquads!![index]
     }
 
-    public Biquad getBiquad(int index) {
-        return m_biquads[index];
+    fun reset() {
+        for (i in 0 until numBiquads) m_states!![i]!!.reset()
     }
 
-    public Cascade() {
-        m_numBiquads = 0;
-        m_biquads = null;
-        m_states = null;
-    }
-
-    public void reset() {
-        for (int i = 0; i < m_numBiquads; i++)
-            m_states[i].reset();
-    }
-
-    public double filter(double in) {
-        double out = in;
-        for (int i = 0; i < m_numBiquads; i++) {
-            if (m_states[i] != null) {
-                out = m_states[i].process1(out, m_biquads[i]);
+    fun filter(`in`: Double): Double {
+        var out = `in`
+        for (i in 0 until numBiquads) {
+            if (m_states!![i] != null) {
+                out = m_states!![i]!!.process1(out, m_biquads!![i])
             }
         }
-        return out;
+        return out
     }
 
-    public Complex response(double normalizedFrequency) {
-        double w = 2 * Math.PI * normalizedFrequency;
-        Complex czn1 = ComplexUtils.polar2Complex(1., -w);
-        Complex czn2 = ComplexUtils.polar2Complex(1., -2 * w);
-        Complex ch = new Complex(1);
-        Complex cbot = new Complex(1);
-
-        for (int i = 0; i < m_numBiquads; i++) {
-            Biquad stage = m_biquads[i];
-            Complex cb = new Complex(1);
-            Complex ct = new Complex(stage.getB0() / stage.getA0());
-            ct = MathSupplement.addmul(ct, stage.getB1() / stage.getA0(), czn1);
-            ct = MathSupplement.addmul(ct, stage.getB2() / stage.getA0(), czn2);
-            cb = MathSupplement.addmul(cb, stage.getA1() / stage.getA0(), czn1);
-            cb = MathSupplement.addmul(cb, stage.getA2() / stage.getA0(), czn2);
-            ch = ch.multiply(ct);
-            cbot = cbot.multiply(cb);
+    fun response(normalizedFrequency: Double): Complex {
+        val w = 2 * Math.PI * normalizedFrequency
+        val czn1 = ComplexUtils.polar2Complex(1.0, -w)
+        val czn2 = ComplexUtils.polar2Complex(1.0, -2 * w)
+        var ch = Complex(1.0)
+        var cbot = Complex(1.0)
+        for (i in 0 until numBiquads) {
+            val stage = m_biquads!![i]
+            var cb: Complex? = Complex(1.0)
+            var ct: Complex? = stage?.b0?.div(stage.a0)?.let { Complex(it) }
+            if (stage != null) {
+                ct = ct?.let { MathSupplement.addmul(it, stage.b1 / stage.a0, czn1) }
+            }
+            if (stage != null) {
+                ct = ct?.let { MathSupplement.addmul(it, stage.b2 / stage.a0, czn2) }
+            }
+            if (stage != null) {
+                cb = cb?.let { MathSupplement.addmul(it, stage.a1 / stage.a0, czn1) }
+            }
+            if (stage != null) {
+                cb = cb?.let { MathSupplement.addmul(it, stage.a2 / stage.a0, czn2) }
+            }
+            ch = ch.multiply(ct)
+            cbot = cbot.multiply(cb)
         }
-
-        return ch.divide(cbot);
+        return ch.divide(cbot)
     }
 
-    public void applyScale(double scale) {
+    fun applyScale(scale: Double) {
         // For higher order filters it might be helpful
         // to spread this factor between all the stages.
-        if (m_biquads.length > 0) {
-            m_biquads[0].applyScale(scale);
+        if (m_biquads!!.isNotEmpty()) {
+            m_biquads!![0]!!.applyScale(scale)
         }
     }
 
-    public void setLayout(LayoutBase proto, int filterTypes) {
-        numPoles = proto.getNumPoles();
-        m_numBiquads = (numPoles + 1) / 2;
-        m_biquads = new Biquad[m_numBiquads];
-        switch (filterTypes) {
-            case DirectFormAbstract.DIRECT_FORM_I:
-                m_states = new DirectFormI[m_numBiquads];
-                for (int i = 0; i < m_numBiquads; i++) {
-                    m_states[i] = new DirectFormI();
+    fun setLayout(proto: LayoutBase, filterTypes: Int) {
+        numPoles = proto.numPoles
+        numBiquads = (numPoles + 1) / 2
+        m_biquads = arrayOfNulls(numBiquads)
+        when (filterTypes) {
+            DirectFormAbstract.DIRECT_FORM_I -> {
+                m_states = arrayOfNulls(numBiquads)
+                var i = 0
+                while (i < numBiquads) {
+                    m_states?.set(i, DirectFormI())
+                    i++
                 }
-                break;
-            case DirectFormAbstract.DIRECT_FORM_II:
-            default:
-                m_states = new DirectFormII[m_numBiquads];
-                for (int i = 0; i < m_numBiquads; i++) {
-                    m_states[i] = new DirectFormII();
+            }
+            DirectFormAbstract.DIRECT_FORM_II -> {
+                m_states = arrayOfNulls(numBiquads)
+                var i = 0
+                while (i < numBiquads) {
+                    m_states?.set(i, DirectFormII())
+                    i++
                 }
-                break;
+            }
+            else -> {
+                m_states = arrayOfNulls(numBiquads)
+                var i = 0
+                while (i < numBiquads) {
+                    m_states?.set(i, DirectFormII())
+                    i++
+                }
+            }
         }
-        for (int i = 0; i < m_numBiquads; ++i) {
-            PoleZeroPair p = proto.getPair(i);
-            m_biquads[i] = new Biquad();
-            m_biquads[i].setPoleZeroPair(p);
+        for (i in 0 until numBiquads) {
+            val p = proto.getPair(i)
+            m_biquads!![i] = Biquad()
+            if (p != null) {
+                m_biquads!![i]!!.setPoleZeroPair(p)
+            }
         }
-        applyScale(proto.getNormalGain()
-                / ((response(proto.getNormalW() / (2 * Math.PI)))).abs());
+        applyScale(
+            proto.normalGain
+                    / response(proto.normalW / (2 * Math.PI)).abs()
+        )
     }
-
 }

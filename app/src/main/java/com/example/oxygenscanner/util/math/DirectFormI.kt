@@ -17,40 +17,39 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
-
-package com.example.oxygenscanner.util.Math;
+package com.example.oxygenscanner.util.math
 
 /**
  * Implementation of a Direct Form I filter with its states. The coefficients
  * are supplied from the outside.
  */
-public class DirectFormI extends DirectFormAbstract {
-
-    public DirectFormI() {
-        reset();
+class DirectFormI : DirectFormAbstract() {
+    override fun reset() {
+        m_x1 = 0.0
+        m_x2 = 0.0
+        m_y1 = 0.0
+        m_y2 = 0.0
     }
 
-    public void reset() {
-        m_x1 = 0;
-        m_x2 = 0;
-        m_y1 = 0;
-        m_y2 = 0;
+    override fun process1(`in`: Double, s: Biquad?): Double {
+        val out = s!!.m_b0 * `in` + s.m_b1 * m_x1 + s.m_b2 * m_x2 - s.m_a1 * m_y1 - s.m_a2 * m_y2
+        m_x2 = m_x1
+        m_y2 = m_y1
+        m_x1 = `in`
+        m_y1 = out
+        return out
     }
 
-    public double process1(double in, Biquad s) {
+    var m_x2 // x[n-2]
+            = 0.0
+    var m_y2 // y[n-2]
+            = 0.0
+    var m_x1 // x[n-1]
+            = 0.0
+    var m_y1 // y[n-1]
+            = 0.0
 
-        double out = s.m_b0 * in + s.m_b1 * m_x1 + s.m_b2 * m_x2
-                - s.m_a1 * m_y1 - s.m_a2 * m_y2;
-        m_x2 = m_x1;
-        m_y2 = m_y1;
-        m_x1 = in;
-        m_y1 = out;
-
-        return out;
+    init {
+        reset()
     }
-
-    double m_x2; // x[n-2]
-    double m_y2; // y[n-2]
-    double m_x1; // x[n-1]
-    double m_y1; // y[n-1]
 }

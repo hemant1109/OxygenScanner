@@ -1,4 +1,8 @@
-package com.example.oxygenscanner.util.Math;
+package com.example.oxygenscanner.util.math
+
+import org.apache.commons.math3.complex.Complex
+
+
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -18,36 +22,29 @@ package com.example.oxygenscanner.util.Math;
  *
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
- */
-
-import org.apache.commons.math3.complex.Complex;
-
-/**
+ */ /**
  * It's written on the tin.
  */
-public class PoleZeroPair {
-
-    public ComplexPair poles;
-    public ComplexPair zeros;
+open class PoleZeroPair {
+    var poles: ComplexPair
+    var zeros: ComplexPair
 
     // single pole/zero
-    public PoleZeroPair(Complex p, Complex z) {
-        poles = new ComplexPair(p);
-        zeros = new ComplexPair(z);
+    constructor(p: Complex, z: Complex) {
+        poles = ComplexPair(p)
+        zeros = ComplexPair(z)
     }
 
     // pole/zero pair
-    public PoleZeroPair(Complex p1, Complex z1, Complex p2, Complex z2) {
-        poles = new ComplexPair(p1, p2);
-        zeros = new ComplexPair(z1, z2);
+    constructor(p1: Complex, z1: Complex, p2: Complex, z2: Complex) {
+        poles = ComplexPair(p1, p2)
+        zeros = ComplexPair(z1, z2)
     }
 
-    public boolean isSinglePole() {
-        return poles.second.equals(new Complex(0, 0))
-                && zeros.second.equals(new Complex(0, 0));
-    }
+    val isSinglePole: Boolean
+        get() = poles.second == Complex(0.0, 0.0) && zeros.second == Complex(0.0, 0.0)
 
-    public boolean is_nan() {
-        return poles.is_nan() || zeros.is_nan();
+    fun is_nan(): Boolean {
+        return poles.is_nan() || zeros.is_nan()
     }
 }

@@ -17,27 +17,20 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
+package com.example.oxygenscanner.util.math
 
-package com.example.oxygenscanner.util.Math;
 
-
-import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.complex.Complex
 
 /**
  * PoleZeroPair with gain factor
  */
-public class BiquadPoleState extends PoleZeroPair {
+class BiquadPoleState : PoleZeroPair {
+    constructor(p: Complex, z: Complex) : super(p, z)
+    constructor(
+        p1: Complex, z1: Complex,
+        p2: Complex, z2: Complex
+    ) : super(p1, z1, p2, z2)
 
-
-    public BiquadPoleState(Complex p, Complex z) {
-        super(p, z);
-    }
-
-    public BiquadPoleState(Complex p1, Complex z1,
-                           Complex p2, Complex z2) {
-        super(p1, z1, p2, z2);
-    }
-
-    double gain;
-
+    var gain = 0.0
 }

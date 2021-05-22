@@ -17,40 +17,39 @@
  *  Copyright (c) 2009 by Vinnie Falco
  *  Copyright (c) 2016 by Bernd Porr
  */
-
-package com.example.oxygenscanner.util.Math;
+package com.example.oxygenscanner.util.math
 
 /**
  * Implementation of a Direct Form II filter with its states. The coefficients
  * are supplied from the outside.
  */
-
-public class DirectFormII extends DirectFormAbstract {
-
-    public DirectFormII() {
-        reset();
+class DirectFormII : DirectFormAbstract() {
+    override fun reset() {
+        m_v1 = 0.0
+        m_v2 = 0.0
     }
 
-    public void reset() {
-        m_v1 = 0;
-        m_v2 = 0;
-    }
-
-    public double process1(double in,
-                           Biquad s) {
-        if (s != null) {
-            double w = in - s.m_a1 * m_v1 - s.m_a2 * m_v2;
-            double out = s.m_b0 * w + s.m_b1 * m_v1 + s.m_b2 * m_v2;
-
-            m_v2 = m_v1;
-            m_v1 = w;
-
-            return out;
+    override fun process1(
+        `in`: Double,
+        s: Biquad?
+    ): Double {
+        return if (s != null) {
+            val w = `in` - s.m_a1 * m_v1 - s.m_a2 * m_v2
+            val out = s.m_b0 * w + s.m_b1 * m_v1 + s.m_b2 * m_v2
+            m_v2 = m_v1
+            m_v1 = w
+            out
         } else {
-            return in;
+            `in`
         }
     }
 
-    double m_v1; // v[-1]
-    double m_v2; // v[-2]
+    var m_v1 // v[-1]
+            = 0.0
+    var m_v2 // v[-2]
+            = 0.0
+
+    init {
+        reset()
+    }
 }

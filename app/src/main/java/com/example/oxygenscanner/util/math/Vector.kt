@@ -1,22 +1,23 @@
-package com.example.oxygenscanner.util.Math;
+package com.example.oxygenscanner.util.math
+
+
 
 /**
- * The <code>Vector</code> class provides some useful static functions to
+ * The `Vector` class provides some useful static functions to
  * compute vectors.
  *
  * @author Michael Lambertz
  */
-public class Vector {
-
-    public static double[] normalize(double[] input) {
-        double sumSquares = 0.0;
+object Vector {
+    fun normalize(input: DoubleArray): DoubleArray {
+        var sumSquares = 0.0
         // First calculate the length
-        for (int i = 0; i < input.length; i++) {
-            sumSquares += Math.pow(input[i], 2);
+        for (i in input.indices) {
+            sumSquares += Math.pow(input[i], 2.0)
         }
         // The actual length of the vector
-        double len = Math.sqrt(sumSquares);
-        return Vector.scale(1 / len, input);
+        val len = Math.sqrt(sumSquares)
+        return Vector.scale(1 / len, input)
     }
 
     /**
@@ -25,19 +26,19 @@ public class Vector {
      * @param inVector the vector
      * @return the resulting vctor
      */
-    public static double[] invVector(
-            double[] inVector) {
-
-        int m = inVector.length;
-        double[] outVector = new double[m];
-        for (int i = 0; i < m; ++i) {
-            if (inVector[i] != 0) {
-                outVector[i] = 1 / inVector[i];
+    fun invVector(
+        inVector: DoubleArray
+    ): DoubleArray {
+        val m = inVector.size
+        val outVector = DoubleArray(m)
+        for (i in 0 until m) {
+            if (inVector[i] != 0.0) {
+                outVector[i] = 1 / inVector[i]
             } else {
-                outVector[i] = 0;
+                outVector[i] = 0.0
             }
         }
-        return (outVector);
+        return outVector
     }
 
     /**
@@ -47,16 +48,16 @@ public class Vector {
      * @param vec2 the second vector
      * @return true, if the vectors are equal
      */
-    public static boolean equals(double[] vec1, double[] vec2) {
-        if (vec1.length != vec2.length) {
-            return (false);
+    fun equals(vec1: DoubleArray, vec2: DoubleArray): Boolean {
+        if (vec1.size != vec2.size) {
+            return false
         }
-        for (int i = 0; i < vec1.length; ++i) {
+        for (i in vec1.indices) {
             if (vec1[i] != vec2[i]) {
-                return (false);
+                return false
             }
         }
-        return (true);
+        return true
     }
 
     /**
@@ -66,27 +67,30 @@ public class Vector {
      * @param len desired length
      * @return the input string eventually suffixed with blanks
      */
-    private static String fillString(String in, int len) {
-        String out = in;
-        while (out.length() < len) {
-            out = " " + out;
+    private fun fillString(`in`: String, len: Int): String {
+        var out = `in`
+        while (out.length < len) {
+            out = " $out"
         }
-        return (out);
+        return out
     }
 
     /**
-     * Converts a vector object into a <code>String</code> object
+     * Converts a vector object into a `String` object
      * representing its content.
      *
      * @param vector the vector to be converted to a string
      * @return the string representing the content of the vector
      */
-    public static String toString(double[] vector) {
-        String result = "";
-        for (int i = 0; i < vector.length; ++i) {
-            result += fillString(Double.toString(vector[i]), 24) + "\n";
+    fun toString(vector: DoubleArray): String {
+        var result = ""
+        for (i in vector.indices) {
+            result += """
+                ${Vector.fillString(java.lang.Double.toString(vector[i]), 24)}
+                
+                """.trimIndent()
         }
-        return (result);
+        return result
     }
 
     /**
@@ -95,8 +99,8 @@ public class Vector {
      * @param m number of elements
      * @return the new vector
      */
-    public static double[] newVector(int m) {
-        return (new double[m]);
+    fun newVector(m: Int): DoubleArray {
+        return DoubleArray(m)
     }
 
     /**
@@ -107,12 +111,12 @@ public class Vector {
      * @param val the element's value
      * @return the new vector
      */
-    public static double[] newVector(int m, double val) {
-        double[] res = new double[m];
-        for (int i = 0; i < m; ++i) {
-            res[i] = val;
+    fun newVector(m: Int, `val`: Double): DoubleArray {
+        val res = DoubleArray(m)
+        for (i in 0 until m) {
+            res[i] = `val`
         }
-        return (res);
+        return res
     }
 
     /**
@@ -123,13 +127,13 @@ public class Vector {
      * @param fac    the factor to scale with
      * @return the scaled vector
      */
-    public static double[] scale(double fac, double[] vector) {
-        int n = vector.length;
-        double[] res = new double[n];
-        for (int i = 0; i < n; ++i) {
-            res[i] = fac * vector[i];
+    fun scale(fac: Double, vector: DoubleArray): DoubleArray {
+        val n = vector.size
+        val res = DoubleArray(n)
+        for (i in 0 until n) {
+            res[i] = fac * vector[i]
         }
-        return (res);
+        return res
     }
 
     /**
@@ -139,13 +143,13 @@ public class Vector {
      * @param vec2 the second vector
      * @return the scalar product of the vectors
      */
-    public static double dot(double[] vec1, double[] vec2) {
-        int n = vec1.length;
-        double res = 0.0;
-        for (int i = 0; i < n; ++i) {
-            res += vec1[i] * vec2[i];
+    fun dot(vec1: DoubleArray, vec2: DoubleArray): Double {
+        val n = vec1.size
+        var res = 0.0
+        for (i in 0 until n) {
+            res += vec1[i] * vec2[i]
         }
-        return (res);
+        return res
     }
 
     /**
@@ -155,13 +159,13 @@ public class Vector {
      * @param vec2 the second vector
      * @return the resulting vector
      */
-    public static double[] add(double[] vec1, double[] vec2) {
-        int m = vec1.length;
-        double[] res = new double[m];
-        for (int i = 0; i < m; ++i) {
-            res[i] = vec1[i] + vec2[i];
+    fun add(vec1: DoubleArray, vec2: DoubleArray): DoubleArray {
+        val m = vec1.size
+        val res = DoubleArray(m)
+        for (i in 0 until m) {
+            res[i] = vec1[i] + vec2[i]
         }
-        return (res);
+        return res
     }
 
     /**
@@ -171,13 +175,13 @@ public class Vector {
      * @param vec2 the second vector
      * @return the resulting vector
      */
-    public static double[] sub(double[] vec1, double[] vec2) {
-        int m = vec1.length;
-        double[] res = new double[m];
-        for (int i = 0; i < m; ++i) {
-            res[i] = vec1[i] - vec2[i];
+    fun sub(vec1: DoubleArray, vec2: DoubleArray): DoubleArray {
+        val m = vec1.size
+        val res = DoubleArray(m)
+        for (i in 0 until m) {
+            res[i] = vec1[i] - vec2[i]
         }
-        return (res);
+        return res
     }
 
     /**
@@ -186,13 +190,13 @@ public class Vector {
      * @param vector the vector to copy
      * @return the copied vector
      */
-    public static double[] clone(double[] vector) {
-        int m = vector.length;
-        double[] res = new double[m];
-        for (int i = 0; i < m; ++i) {
-            res[i] = vector[i];
+    fun clone(vector: DoubleArray): DoubleArray {
+        val m = vector.size
+        val res = DoubleArray(m)
+        for (i in 0 until m) {
+            res[i] = vector[i]
         }
-        return (res);
+        return res
     }
 
     /**
@@ -201,12 +205,12 @@ public class Vector {
      * @param m the number of elements
      * @return the random vector
      */
-    public static double[] random(int m) {
-        double[] res = new double[m];
-        for (int i = 0; i < m; ++i) {
-            res[i] = Math.random();
+    fun random(m: Int): DoubleArray {
+        val res = DoubleArray(m)
+        for (i in 0 until m) {
+            res[i] = Math.random()
         }
-        return (res);
+        return res
     }
 
     /**
@@ -216,33 +220,33 @@ public class Vector {
      * @param addVec the vector to subtract
      * @return the resulting set
      */
-    public static double[][] addVecToSet(
-            double[][] vecSet,
-            double[] addVec) {
-        int m = Matrix.getNumOfRows(vecSet);
-        int n = Matrix.getNumOfColumns(vecSet);
-        double[][] res = Matrix.newMatrix(m, n);
-        for (int i = 0; i < m; ++i) {
-            double add = addVec[i];
-            for (int j = 0; j < n; ++j) {
-                res[i][j] = vecSet[i][j] + add;
+    fun addVecToSet(
+        vecSet: Array<DoubleArray>,
+        addVec: DoubleArray
+    ): Array<DoubleArray?> {
+        val m = Matrix.getNumOfRows(vecSet)
+        val n = Matrix.getNumOfColumns(vecSet)
+        val res = Matrix.newMatrix(m, n)
+        for (i in 0 until m) {
+            val add = addVec[i]
+            for (j in 0 until n) {
+                res[i]?.set(j, vecSet[i][j] + add)
             }
         }
-        return (res);
+        return res
     }
 
-    public static double[] center(double[] vec) {
-        int n = vec.length;
-        double mValue = 0.0;
-        for (int i = 0; i < n; i++) {
-            mValue += vec[i];
+    fun center(vec: DoubleArray): DoubleArray {
+        val n = vec.size
+        var mValue = 0.0
+        for (i in 0 until n) {
+            mValue += vec[i]
         }
-        mValue /= n;
-
-        double[] cVec = new double[n];
-        for (int i = 0; i < n; i++) {
-            cVec[i] = vec[i] - mValue;
+        mValue /= n.toDouble()
+        val cVec = DoubleArray(n)
+        for (i in 0 until n) {
+            cVec[i] = vec[i] - mValue
         }
-        return cVec;
+        return cVec
     }
 }
