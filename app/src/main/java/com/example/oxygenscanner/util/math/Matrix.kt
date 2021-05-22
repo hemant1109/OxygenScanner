@@ -390,8 +390,8 @@ object Matrix {
     fun invMatrix(mat: DoubleArray): DoubleArray {
         val n = mat.size
         val res = DoubleArray(n)
-        var det = 0.0
-        var predet = 0.0
+        var det: Double
+        var predet: Double
         predet = mat[0]
         for (x in 1..2) {
             predet = predet * mat[x]

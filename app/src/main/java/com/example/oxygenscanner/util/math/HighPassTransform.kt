@@ -28,15 +28,15 @@ import org.apache.commons.math3.complex.Complex
 class HighPassTransform(fc: Double, digital: LayoutBase, analog: LayoutBase) {
     var f: Double
     private fun transform(c: Complex): Complex {
-        var c = c
-        if (c.isInfinite) return Complex(1.0, 0.0)
+        var c1 = c
+        if (c1.isInfinite) return Complex(1.0, 0.0)
 
         // frequency transform
-        c = c.multiply(f)
+        c1 = c1.multiply(f)
 
         // bilinear high pass transform
-        return Complex(-1.0).multiply(Complex(1.0).add(c)).divide(
-            Complex(1.0).subtract(c)
+        return Complex(-1.0).multiply(Complex(1.0).add(c1)).divide(
+            Complex(1.0).subtract(c1)
         )
     }
 

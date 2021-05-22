@@ -27,15 +27,15 @@ import org.apache.commons.math3.complex.Complex
 class LowPassTransform(fc: Double, digital: LayoutBase, analog: LayoutBase) {
     private val f: Double
     private fun transform(c: Complex): Complex {
-        var c = c
-        if (c.isInfinite) return Complex(-1.0, 0.0)
+        var c1 = c
+        if (c1.isInfinite) return Complex(-1.0, 0.0)
 
         // frequency transform
-        c = c.multiply(f)
+        c1 = c1.multiply(f)
         val one = Complex(1.0, 0.0)
 
         // bilinear low pass transform
-        return one.add(c).divide(one.subtract(c))
+        return one.add(c1).divide(one.subtract(c1))
     }
 
     init {
