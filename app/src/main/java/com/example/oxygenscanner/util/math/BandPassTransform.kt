@@ -22,6 +22,7 @@ package com.example.oxygenscanner.util.math
 
 
 import org.apache.commons.math3.complex.Complex
+import kotlin.math.*
 
 /**
  * Transforms from an analogue bandpass filter to a digital bandstop filter
@@ -62,17 +63,17 @@ class BandPassTransform(
 
     init {
         digital.reset()
-        val ww = 2 * Math.PI * fw
+        val ww = 2 * PI * fw
 
         // pre-calcs
-        wc2 = 2 * Math.PI * fc - ww / 2
+        wc2 = 2 * PI * fc - ww / 2
         wc = wc2 + ww
 
         // what is this crap?
         if (wc2 < 1e-8) wc2 = 1e-8
-        if (wc > Math.PI - 1e-8) wc = Math.PI - 1e-8
-        a = Math.cos((wc + wc2) * 0.5) / Math.cos((wc - wc2) * 0.5)
-        b = 1 / Math.tan((wc - wc2) * 0.5)
+        if (wc > PI - 1e-8) wc = PI - 1e-8
+        a = cos((wc + wc2) * 0.5) / cos((wc - wc2) * 0.5)
+        b = 1 / tan((wc - wc2) * 0.5)
         a2 = a * a
         b2 = b * b
         ab = a * b
@@ -97,10 +98,10 @@ class BandPassTransform(
         }
         val wn = analog.normalW
         digital.setNormal(
-            2 * Math.atan(
-                Math.sqrt(
-                    Math.tan((wc + wn) * 0.5)
-                            * Math.tan((wc2 + wn) * 0.5)
+            2 * atan(
+                sqrt(
+                    tan((wc + wn) * 0.5)
+                            * tan((wc2 + wn) * 0.5)
                 )
             ), analog.normalGain
         )

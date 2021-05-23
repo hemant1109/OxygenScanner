@@ -20,7 +20,9 @@
 package com.example.oxygenscanner.util.math
 
 import org.apache.commons.math3.complex.Complex
-
+import kotlin.math.abs
+import kotlin.math.ln
+import kotlin.math.sqrt
 
 
 /**
@@ -39,7 +41,7 @@ object MathSupplement {
     }
 
     fun adjust_imag(c: Complex): Complex {
-        return if (Math.abs(c.imaginary) < 1e-30) Complex(c.real, 0.0) else c
+        return if (abs(c.imaginary) < 1e-30) Complex(c.real, 0.0) else c
     }
 
     fun addmul(c: Complex, v: Double, c1: Complex): Complex {
@@ -55,10 +57,10 @@ object MathSupplement {
     }
 
     fun asinh(x: Double): Double {
-        return Math.log(x + Math.sqrt(x * x + 1))
+        return ln(x + sqrt(x * x + 1))
     }
 
     fun acosh(x: Double): Double {
-        return Math.log(x + Math.sqrt(x * x - 1))
+        return ln(x + sqrt(x * x - 1))
     }
 }

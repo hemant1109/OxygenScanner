@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.PixelFormat
 import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
 import android.os.Bundle
@@ -12,18 +13,22 @@ import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.util.Log
 import android.view.SurfaceHolder
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.oxygenscanner.databinding.ActivityO2ProcessBinding
-import com.example.oxygenscanner.ui.login.LoginActivity
+import com.example.oxygenscanner.util.Util
 import com.example.oxygenscanner.util.imageprocessing.ImageProcessing.decodeYUV420SPtoRedBlueGreenAvg
 import com.example.oxygenscanner.util.math.Fft
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ceil
+import kotlin.math.sqrt
 
 class O2Process : Activity() {
+
+    private var totalTimeInSecs: Double = 0.0
 
     //Toast
     private var mainToast: Toast? = null
@@ -40,11 +45,12 @@ class O2Process : Activity() {
     var sumred = 0.0
     var sumblue = 0.0
     var o2 = 0
+    private val secondsToScanning = 30
 
     //Arraylist
     var RedAvgList = ArrayList<Double>()
     var BlueAvgList = ArrayList<Double>()
-    var counter = 0
+    var frameCounter = 0
     lateinit var binding: ActivityO2ProcessBinding
 
     @SuppressLint("InvalidWakeLockTag")
@@ -60,8 +66,10 @@ class O2Process : Activity() {
 
         // XML - Java Connecting
         previewHolder = binding.preview.holder
+        previewHolder?.setKeepScreenOn(true)
         previewHolder?.addCallback(surfaceCallback)
         previewHolder?.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
+        binding.O2PB.max = secondsToScanning
 
         binding.O2PB.progress = 0
         binding.txtCountDown.text = ""
@@ -173,71 +181,79 @@ class O2Process : Activity() {
         sumblue += BlueAvg
         RedAvgList.add(RedAvg)
         BlueAvgList.add(BlueAvg)
-        ++counter //countes number of frames in 30 seconds
+        ++frameCounter //counts number of frames in 30 seconds
 
         //To check if we got a good red intensity to process if not return to the condition and set it again until we get a good red intensity
         if (RedAvg < 200) {
             inc = 0
             ProgP = inc
-            binding.O2PB.progress = ProgP
-            binding.txtCountDown.text = ProgP.toString()
+            updateProgress(totalTimeInSecs)
             processing.set(false)
         }
         val endTime = System.currentTimeMillis()
-        val totalTimeInSecs = (endTime - startTime) / 1000.0 //to convert time to seconds
-        if (totalTimeInSecs >= 30) { //when 30 seconds of measuring passes do the following " we chose 30 seconds to take half sample since 60 seconds is normally a full sample of the heart beat
+        totalTimeInSecs = (endTime - startTime) / 1000.0 //to convert time to seconds
+        updateProgress(totalTimeInSecs)
+        Util.logD(msg = "totalTimeInSecs ${totalTimeInSecs.toInt()}")
+        if (totalTimeInSecs >= secondsToScanning) { //when 30 seconds of measuring passes do the following " we chose 30 seconds to take half sample since 60 seconds is normally a full sample of the heart beat
             startTime = System.currentTimeMillis()
-            SamplingFreq = counter / totalTimeInSecs
+            SamplingFreq = frameCounter / totalTimeInSecs
             val Red = RedAvgList.toTypedArray()
             val Blue = BlueAvgList.toTypedArray()
-            val HRFreq = Fft.fFT(Red, counter, SamplingFreq)
+            val HRFreq = Fft.fFT(Red, frameCounter, SamplingFreq)
             val bpm: Double = ceil(HRFreq * 60)
-            val meanr = sumred / counter
-            val meanb = sumblue / counter
-            for (i in 0 until counter - 1) {
+            val meanr = sumred / frameCounter
+            val meanb = sumblue / frameCounter
+            for (i in 0 until frameCounter - 1) {
                 val bufferb = Blue[i]
                 Stdb += (bufferb - meanb) * (bufferb - meanb)
                 val bufferr = Red[i]
                 Stdr += (bufferr - meanr) * (bufferr - meanr)
             }
-            val varr = Math.sqrt(Stdr / (counter - 1))
-            val varb = Math.sqrt(Stdb / (counter - 1))
+            val varr = sqrt(Stdr / (frameCounter - 1))
+            val varb = sqrt(Stdb / (frameCounter - 1))
             val R = varr / meanr / (varb / meanb)
             val spo2 = 100 - 5 * R
             o2 = spo2.toInt()
+            Util.logD(msg = "bpm ${bpm.toInt()}")
+            Util.logD(msg = "o2 $o2")
             if (o2 < 80 || o2 > 99 || bpm < 45 || bpm > 200) {
                 inc = 0
                 ProgP = inc
-                binding.O2PB.progress = ProgP
-                binding.txtCountDown.text = ProgP.toString()
+                updateProgress(totalTimeInSecs)
+                Util.logD(msg = "Measurement Failed")
                 mainToast =
                     Toast.makeText(applicationContext, "Measurement Failed", Toast.LENGTH_SHORT)
                 mainToast?.show()
                 startTime = System.currentTimeMillis()
-                counter = 0
+                frameCounter = 0
                 processing.set(false)
                 return@PreviewCallback
             }
         }
-        if (o2 != 0) {
+        if (o2 != 0 && processing.get()) {
             val i = Intent(this@O2Process, O2Result::class.java)
             i.putExtra("O2R", o2)
             i.putExtra("Usr", user)
             startActivity(i)
-            finish()
         }
         if (RedAvg != 0.0) {
             ProgP = inc++ / 34
-            binding.O2PB.progress = ProgP
-            binding.txtCountDown.text = ProgP.toString()
+            updateProgress(totalTimeInSecs)
         }
         processing.set(false)
     }
+
+    private fun updateProgress(totalTimeInSecs: Double) {
+        binding.O2PB.progress = (secondsToScanning - totalTimeInSecs.toInt())
+        binding.txtCountDown.text = (secondsToScanning - totalTimeInSecs.toInt()).toString()
+    }
+
     private val surfaceCallback: SurfaceHolder.Callback = object : SurfaceHolder.Callback {
         override fun surfaceCreated(holder: SurfaceHolder) {
             try {
                 camera?.setPreviewDisplay(previewHolder)
                 camera?.setPreviewCallback(previewCallback)
+                Util.logD(msg = "setPreviewDisplay")
             } catch (t: Throwable) {
                 Log.e("PreviewDemoSurfcCallbck", "Exception in setPreviewDisplay()", t)
             }
@@ -259,14 +275,6 @@ class O2Process : Activity() {
         override fun surfaceDestroyed(holder: SurfaceHolder) {
             // Ignore
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        val i = Intent(this@O2Process, LoginActivity::class.java)
-        i.putExtra("Usr", user)
-        startActivity(i)
-        finish()
     }
 
     companion object {

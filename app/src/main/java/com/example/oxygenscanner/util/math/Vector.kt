@@ -1,5 +1,7 @@
 package com.example.oxygenscanner.util.math
 
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 
 /**
@@ -13,11 +15,11 @@ object Vector {
         var sumSquares = 0.0
         // First calculate the length
         for (i in input.indices) {
-            sumSquares += Math.pow(input[i], 2.0)
+            sumSquares += input[i].pow(2.0)
         }
         // The actual length of the vector
-        val len = Math.sqrt(sumSquares)
-        return Vector.scale(1 / len, input)
+        val len = sqrt(sumSquares)
+        return scale(1 / len, input)
     }
 
     /**

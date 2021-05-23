@@ -20,6 +20,8 @@
 package com.example.oxygenscanner.util.math
 
 import org.apache.commons.math3.complex.Complex
+import kotlin.math.PI
+import kotlin.math.tan
 
 /**
  * Transforms from an analogue lowpass filter to a digital lowpass filter
@@ -42,7 +44,7 @@ class LowPassTransform(fc: Double, digital: LayoutBase, analog: LayoutBase) {
         digital.reset()
 
         // prewarp
-        f = Math.tan(Math.PI * fc)
+        f = tan(PI * fc)
         val numPoles: Int = analog.numPoles
         val pairs = numPoles / 2
         for (i in 0 until pairs) {

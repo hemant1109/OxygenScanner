@@ -3,6 +3,7 @@ package com.example.oxygenscanner.util.math
 
 import org.apache.commons.math3.analysis.solvers.LaguerreSolver
 import org.apache.commons.math3.complex.Complex
+import kotlin.math.pow
 
 /*
 * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -45,7 +46,7 @@ class Bessel : Cascade() {
         // polynomial of degree n
         private fun reverseBessel(k: Int, n: Int): Double {
             return (fact(2 * n - k)
-                    / (fact(n - k) * fact(k) * Math.pow(2.0, (n - k).toDouble())))
+                    / (fact(n - k) * fact(k) * 2.0.pow((n - k).toDouble())))
         }
 
         fun design() {

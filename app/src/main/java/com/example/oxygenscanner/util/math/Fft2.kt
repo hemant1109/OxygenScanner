@@ -2,7 +2,7 @@ package com.example.oxygenscanner.util.math
 
 import com.example.oxygenscanner.util.math.Butterworth
 import com.example.oxygenscanner.util.math.DoubleFft1d
-
+import kotlin.math.abs
 
 
 object Fft2 {
@@ -22,7 +22,7 @@ object Fft2 {
             output[x] = butterworth.filter(output[x])
         }
         for (x in 0 until 2 * size) {
-            output[x] = Math.abs(output[x])
+            output[x] = abs(output[x])
         }
         for (p in 12 until size) {
             if (temp < output[p]) {

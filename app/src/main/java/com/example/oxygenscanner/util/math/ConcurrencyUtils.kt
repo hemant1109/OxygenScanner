@@ -37,6 +37,9 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.ThreadFactory
+import kotlin.math.floor
+import kotlin.math.ln
+import kotlin.math.pow
 
 /**
  * Concurrency utilities.
@@ -183,10 +186,7 @@ object ConcurrencyUtils {
      */
     fun prevPow2(x: Int): Int {
         require(x >= 1) { "x must be greater or equal 1" }
-        return Math.pow(
-            2.0,
-            Math.floor(Math.log(x.toDouble()) / Math.log(2.0))
-        ).toInt()
+        return 2.0.pow(floor(ln(x.toDouble()) / ln(2.0))).toInt()
     }
 
     /**

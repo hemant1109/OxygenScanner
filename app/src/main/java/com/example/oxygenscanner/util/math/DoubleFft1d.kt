@@ -35,7 +35,9 @@ package com.example.oxygenscanner.util.math
 
 import java.util.concurrent.Future
 import kotlin.math.ceil
+import kotlin.math.cos
 import kotlin.math.ln
+import kotlin.math.sin
 
 /**
  * Computes 1D Discrete Fourier Transform (DFT) of complex and real, double
@@ -216,14 +218,13 @@ class DoubleFft1d(n: Int) {
         if (n == 1) return
         when (plan) {
             Plans.SPLIT_RADIX -> {
-                val xi: Double
                 if (n > 4) {
                     cftfsub(n, a, offa, ip, nw, w)
                     rftfsub(n, a, offa, nc, w, nw)
                 } else if (n == 4) {
                     cftx020(a, offa)
                 }
-                xi = a[offa] - a[offa + 1]
+                val xi: Double = a[offa] - a[offa + 1]
                 a[offa] += a[offa + 1]
                 a[offa + 1] = xi
             }
@@ -704,8 +705,8 @@ class DoubleFft1d(n: Int) {
                     fi += 1.0
                     arg = fi * argld
                     val idx = i + twon
-                    wtable[offw + idx - 1] = Math.cos(arg)
-                    wtable[offw + idx] = Math.sin(arg)
+                    wtable[offw + idx - 1] = cos(arg)
+                    wtable[offw + idx] = sin(arg)
                     ii += 2
                 }
                 if (ip > 5) {
@@ -800,8 +801,8 @@ class DoubleFft1d(n: Int) {
                     fi += 1.0
                     arg = fi * argld
                     val idx = i + twon
-                    wtable[idx - 1] = Math.cos(arg)
-                    wtable[idx] = Math.sin(arg)
+                    wtable[idx - 1] = cos(arg)
+                    wtable[idx] = sin(arg)
                     ii += 2
                 }
                 if (ip > 5) {
@@ -894,8 +895,8 @@ class DoubleFft1d(n: Int) {
                     fi += 1.0
                     arg = fi * argld
                     val idx = i + n
-                    wtable_r[idx - 2] = Math.cos(arg)
-                    wtable_r[idx - 1] = Math.sin(arg)
+                    wtable_r[idx - 2] = cos(arg)
+                    wtable_r[idx - 1] = sin(arg)
                     ii += 2
                 }
                 `is` += ido
@@ -916,8 +917,8 @@ class DoubleFft1d(n: Int) {
             k += 2 * i - 1
             if (k >= 2 * n) k -= 2 * n
             arg = pi_n * k
-            bk1[2 * i] = Math.cos(arg)
-            bk1[2 * i + 1] = Math.sin(arg)
+            bk1[2 * i] = cos(arg)
+            bk1[2 * i + 1] = sin(arg)
         }
         val scale = 1.0 / nBluestein
         bk2[0] = bk1[0] * scale
@@ -953,24 +954,24 @@ class DoubleFft1d(n: Int) {
             nwh = nw shr 1
             delta = 0.785398163397448278999490867136046290 / nwh
             delta2 = delta * 2
-            wn4r = Math.cos(delta * nwh)
+            wn4r = cos(delta * nwh)
             w[0] = 1.0
             w[1] = wn4r
             if (nwh == 4) {
-                w[2] = Math.cos(delta2)
-                w[3] = Math.sin(delta2)
+                w[2] = cos(delta2)
+                w[3] = sin(delta2)
             } else if (nwh > 4) {
                 makeipt(nw)
-                w[2] = 0.5 / Math.cos(delta2)
-                w[3] = 0.5 / Math.cos(delta * 6)
+                w[2] = 0.5 / cos(delta2)
+                w[3] = 0.5 / cos(delta * 6)
                 j = 4
                 while (j < nwh) {
                     deltaj = delta * j
                     deltaj3 = 3 * deltaj
-                    w[j] = Math.cos(deltaj)
-                    w[j + 1] = Math.sin(deltaj)
-                    w[j + 2] = Math.cos(deltaj3)
-                    w[j + 3] = -Math.sin(deltaj3)
+                    w[j] = cos(deltaj)
+                    w[j + 1] = sin(deltaj)
+                    w[j + 2] = cos(deltaj3)
+                    w[j + 3] = -sin(deltaj3)
                     j += 4
                 }
             }
@@ -1045,13 +1046,13 @@ class DoubleFft1d(n: Int) {
         if (nc > 1) {
             nch = nc shr 1
             delta = 0.785398163397448278999490867136046290 / nch
-            c[startc] = Math.cos(delta * nch)
+            c[startc] = cos(delta * nch)
             c[startc + nch] = 0.5 * c[startc]
             j = 1
             while (j < nch) {
                 deltaj = delta * j
-                c[startc + j] = 0.5 * Math.cos(deltaj)
-                c[startc + nc - j] = 0.5 * Math.sin(deltaj)
+                c[startc + j] = 0.5 * cos(deltaj)
+                c[startc + nc - j] = 0.5 * sin(deltaj)
                 j++
             }
         }
@@ -2805,8 +2806,8 @@ class DoubleFft1d(n: Int) {
         var w1r: Double
         var w1i: Double
         arg = TWO_PI / ip.toDouble()
-        dcp = Math.cos(arg)
-        dsp = Math.sin(arg)
+        dcp = cos(arg)
+        dsp = sin(arg)
         ipph = (ip + 1) / 2
         nbd = (ido - 1) / 2
         if (ido != 1) {
@@ -3121,8 +3122,8 @@ class DoubleFft1d(n: Int) {
         var ar1h: Double
         var ar2h: Double
         arg = TWO_PI / ip.toDouble()
-        dcp = Math.cos(arg)
-        dsp = Math.sin(arg)
+        dcp = cos(arg)
+        dsp = sin(arg)
         nbd = (ido - 1) / 2
         ipph = (ip + 1) / 2
         val idx0 = ip * ido
@@ -7218,7 +7219,7 @@ class DoubleFft1d(n: Int) {
         } else {
             plan = Plans.SPLIT_RADIX
             ip = IntArray(
-                2 + Math.ceil((2 + (1 shl (Math.log(n + 0.5) / Math.log(2.0)).toInt() / 2)).toDouble())
+                2 + ceil((2 + (1 shl (ln(n + 0.5) / ln(2.0)).toInt() / 2)).toDouble())
                     .toInt()
             )
             w = DoubleArray(n)

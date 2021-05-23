@@ -21,6 +21,7 @@ package com.example.oxygenscanner.util.math
 
 import org.apache.commons.math3.complex.Complex
 import org.apache.commons.math3.complex.ComplexUtils
+import kotlin.math.PI
 
 /**
  * The mother of all filters. It contains the coefficients of all
@@ -57,7 +58,7 @@ open class Cascade {
     }
 
     fun response(normalizedFrequency: Double): Complex {
-        val w = 2 * Math.PI * normalizedFrequency
+        val w = 2 * PI * normalizedFrequency
         val czn1 = ComplexUtils.polar2Complex(1.0, -w)
         val czn2 = ComplexUtils.polar2Complex(1.0, -2 * w)
         var ch = Complex(1.0)
@@ -131,7 +132,7 @@ open class Cascade {
         }
         applyScale(
             proto.normalGain
-                    / response(proto.normalW / (2 * Math.PI)).abs()
+                    / response(proto.normalW / (2 * PI)).abs()
         )
     }
 }

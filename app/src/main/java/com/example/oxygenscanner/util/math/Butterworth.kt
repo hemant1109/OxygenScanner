@@ -21,6 +21,7 @@ package com.example.oxygenscanner.util.math
 
 import org.apache.commons.math3.complex.Complex
 import org.apache.commons.math3.complex.ComplexUtils
+import kotlin.math.PI
 
 /**
  * User facing class which contains all the methods the user uses
@@ -40,8 +41,8 @@ class Butterworth : Cascade() {
             val pairs = nPoles / 2
             for (i in 0 until pairs) {
                 val c = ComplexUtils.polar2Complex(
-                    1.0, Math.PI / 2.0
-                            + (2 * i + 1) * Math.PI / n2
+                    1.0, PI / 2.0
+                            + (2 * i + 1) * PI / n2
                 )
                 addPoleZeroConjugatePairs(c, Complex.INF)
             }

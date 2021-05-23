@@ -22,6 +22,9 @@ package com.example.oxygenscanner.util.math
 
 
 import org.apache.commons.math3.complex.Complex
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.tan
 
 /**
  * Transforms from an analogue lowpass filter to a digital bandstop filter
@@ -61,16 +64,16 @@ class BandStopTransform(
 
     init {
         digital.reset()
-        val ww = 2 * Math.PI * fw
-        wc2 = 2 * Math.PI * fc - ww / 2
+        val ww = 2 * PI * fw
+        wc2 = 2 * PI * fc - ww / 2
         wc = wc2 + ww
 
         // this is crap
         if (wc2 < 1e-8) wc2 = 1e-8
-        if (wc > Math.PI - 1e-8) wc = Math.PI - 1e-8
-        a = Math.cos((wc + wc2) * .5) /
-                Math.cos((wc - wc2) * .5)
-        b = Math.tan((wc - wc2) * .5)
+        if (wc > PI - 1e-8) wc = PI - 1e-8
+        a = cos((wc + wc2) * .5) /
+                cos((wc - wc2) * .5)
+        b = tan((wc - wc2) * .5)
         a2 = a * a
         b2 = b * b
         val numPoles = analog.numPoles
@@ -91,7 +94,7 @@ class BandStopTransform(
                 }
             }
         }
-        if (fc < 0.25) digital.setNormal(Math.PI, analog.normalGain) else digital.setNormal(
+        if (fc < 0.25) digital.setNormal(PI, analog.normalGain) else digital.setNormal(
             0.0,
             analog.normalGain
         )

@@ -23,6 +23,7 @@ package com.example.oxygenscanner.util.math
 
 import org.apache.commons.math3.complex.Complex
 import org.apache.commons.math3.complex.ComplexUtils
+import kotlin.math.PI
 
 /**
  * Contains the coefficients of a 2nd order digital filter with two poles and two zeros
@@ -52,7 +53,7 @@ class Biquad {
         val b0 = b0
         val b1 = b1
         val b2 = b2
-        val w = 2 * Math.PI * normalizedFrequency
+        val w = 2 * PI * normalizedFrequency
         val czn1 = ComplexUtils.polar2Complex(1.0, -w)
         val czn2 = ComplexUtils.polar2Complex(1.0, -2 * w)
         var ch = Complex(1.0)
