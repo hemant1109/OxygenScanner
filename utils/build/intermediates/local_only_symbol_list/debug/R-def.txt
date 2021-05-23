@@ -1,0 +1,6 @@
+R_DEF: Internal format may change without notice
+local
+drawable ic_shutter
+drawable ic_shutter_focused
+drawable ic_shutter_normal
+drawable ic_shutter_pressed

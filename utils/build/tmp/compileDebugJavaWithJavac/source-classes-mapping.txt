@@ -1,0 +1,2 @@
+com/example/android/camera/utils/BuildConfig.java
+ com.example.android.camera.utils.BuildConfig
