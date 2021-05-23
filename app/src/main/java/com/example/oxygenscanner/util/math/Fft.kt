@@ -1,7 +1,6 @@
 package com.example.oxygenscanner.util.math
 
-import com.example.oxygenscanner.util.math.DoubleFft1d
-
+import kotlin.math.abs
 
 
 object Fft {
@@ -16,7 +15,7 @@ object Fft {
         val fft = DoubleFft1d(size)
         fft.realForward(output)
         for (x in 0 until 2 * size) {
-            output[x] = Math.abs(output[x])
+            output[x] = abs(output[x])
         }
         for (p in 35 until size) { // 12 was chosen because it is a minimum frequency that we think people can get to determine heart rate.
             if (temp < output[p]) {

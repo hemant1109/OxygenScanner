@@ -1,2 +1,3 @@
 rootProject.name = "OxygenScanner"
 include ':app'
+include ':utils'

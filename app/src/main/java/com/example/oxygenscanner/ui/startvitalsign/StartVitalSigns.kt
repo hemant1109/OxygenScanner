@@ -52,13 +52,6 @@ class StartVitalSigns : AppCompatActivity() {
         finish()
     }
 
-    override fun onBackPressed() {
-        val i = Intent(this@StartVitalSigns, LoginActivity::class.java)
-        startActivity(i)
-        finish()
-        super.onBackPressed()
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
