@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.PixelFormat
 import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
 import android.os.Bundle
@@ -13,7 +12,7 @@ import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.util.Log
 import android.view.SurfaceHolder
-import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -63,8 +62,8 @@ class O2Process : Activity() {
             user = extras.getString("Usr")
             //The key argument here must match that used in the other activity
         }
-
         // XML - Java Connecting
+        Util.logD(msg = "O2Process previewHolder addCallback")
         previewHolder = binding.preview.holder
         previewHolder?.setKeepScreenOn(true)
         previewHolder?.addCallback(surfaceCallback)
@@ -72,8 +71,9 @@ class O2Process : Activity() {
         binding.O2PB.max = secondsToScanning
 
         binding.O2PB.progress = 0
-        binding.txtCountDown.text = ""
+        //binding.txtCountDown.text = ""
         // WakeLock Initialization : Forces the phone to stay On
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen")
     }
@@ -119,12 +119,14 @@ class O2Process : Activity() {
     // this callback will be invoked on A. B will not be created until A's onPause() returns, so be sure to not do anything lengthy here.
     public override fun onPause() {
         super.onPause()
+        Util.logD(msg = "O2Process onPause called")
         if (wakeLock!!.isHeld)
             wakeLock!!.release()
         camera?.setPreviewCallback(null)
         camera?.stopPreview()
         camera?.release()
         camera = null
+        Util.logD(msg = "O2Process camera null")
     }
 
     override fun onRequestPermissionsResult(
@@ -139,6 +141,7 @@ class O2Process : Activity() {
         } else if (requestCode == REQUEST_CAMERA) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //start your camera
+                Util.logD(msg = "O2Process onRequestPermissionsResult camera start")
                 camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK)
                 camera?.setDisplayOrientation(90)
                 startTime = System.currentTimeMillis()
@@ -193,7 +196,6 @@ class O2Process : Activity() {
         val endTime = System.currentTimeMillis()
         totalTimeInSecs = (endTime - startTime) / 1000.0 //to convert time to seconds
         updateProgress(totalTimeInSecs)
-        Util.logD(msg = "totalTimeInSecs ${totalTimeInSecs.toInt()}")
         if (totalTimeInSecs >= secondsToScanning) { //when 30 seconds of measuring passes do the following " we chose 30 seconds to take half sample since 60 seconds is normally a full sample of the heart beat
             startTime = System.currentTimeMillis()
             SamplingFreq = frameCounter / totalTimeInSecs
@@ -214,13 +216,13 @@ class O2Process : Activity() {
             val R = varr / meanr / (varb / meanb)
             val spo2 = 100 - 5 * R
             o2 = spo2.toInt()
-            Util.logD(msg = "bpm ${bpm.toInt()}")
-            Util.logD(msg = "o2 $o2")
-            if (o2 < 80 || o2 > 99 || bpm < 45 || bpm > 200) {
+            Util.logD(msg = "O2Process bpm ${bpm.toInt()}")
+            Util.logD(msg = "O2Process o2 $o2")
+            if (o2 < 80 || o2 > 99 /*|| bpm < 45 || bpm > 200*/) {
                 inc = 0
                 ProgP = inc
                 updateProgress(totalTimeInSecs)
-                Util.logD(msg = "Measurement Failed")
+                Util.logD(msg = "O2Process Measurement Failed")
                 mainToast =
                     Toast.makeText(applicationContext, "Measurement Failed", Toast.LENGTH_SHORT)
                 mainToast?.show()
@@ -230,11 +232,12 @@ class O2Process : Activity() {
                 return@PreviewCallback
             }
         }
-        if (o2 != 0 && processing.get()) {
+        if (o2 != 0) {
             val i = Intent(this@O2Process, O2Result::class.java)
             i.putExtra("O2R", o2)
             i.putExtra("Usr", user)
             startActivity(i)
+            finish()
         }
         if (RedAvg != 0.0) {
             ProgP = inc++ / 34
@@ -244,25 +247,28 @@ class O2Process : Activity() {
     }
 
     private fun updateProgress(totalTimeInSecs: Double) {
-        binding.O2PB.progress = (secondsToScanning - totalTimeInSecs.toInt())
-        binding.txtCountDown.text = (secondsToScanning - totalTimeInSecs.toInt()).toString()
+        binding.O2PB.progress = ProgP/*(secondsToScanning - totalTimeInSecs.toInt())*/
+        //binding.txtCountDown.text = (secondsToScanning - totalTimeInSecs.toInt()).toString()
     }
 
     private val surfaceCallback: SurfaceHolder.Callback = object : SurfaceHolder.Callback {
         override fun surfaceCreated(holder: SurfaceHolder) {
             try {
+                Util.logD(msg = "O2Process surfaceCallback surfaceCreated")
                 camera?.setPreviewDisplay(previewHolder)
                 camera?.setPreviewCallback(previewCallback)
-                Util.logD(msg = "setPreviewDisplay")
+                Util.logD(msg = "O2Process setPreviewDisplay")
             } catch (t: Throwable) {
-                Log.e("PreviewDemoSurfcCallbck", "Exception in setPreviewDisplay()", t)
+                Log.e("PreviewDemoSurfcCallbck", "O2Process Exception in setPreviewDisplay()", t)
             }
         }
 
         override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+            Util.logD(msg = "O2Process surfaceCallback surfaceChanged")
+
             camera?.parameters?.let { parameters ->
                 parameters.flashMode = Camera.Parameters.FLASH_MODE_TORCH
-                val size = parameters.let { getSmallestPreviewSize(width, height, it) }
+                val size = getSmallestPreviewSize(width, height, parameters)
                 if (size != null) {
                     parameters.setPreviewSize(size.width, size.height)
                     Log.d(TAG, "Using width=" + size.width + " height=" + size.height)
@@ -274,6 +280,7 @@ class O2Process : Activity() {
 
         override fun surfaceDestroyed(holder: SurfaceHolder) {
             // Ignore
+            Util.logD(msg = "O2Process surfaceDestroyed called")
         }
     }
 

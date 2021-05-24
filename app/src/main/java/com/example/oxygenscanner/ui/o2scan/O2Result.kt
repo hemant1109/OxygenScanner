@@ -49,4 +49,13 @@ class O2Result : AppCompatActivity() {
             }
         }
     }
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        val i = Intent(this@O2Result, O2Process::class.java)
+        i.putExtra("O2R", O2)
+        i.putExtra("Usr", user)
+        startActivity(i)
+        finish()
+    }
 }
