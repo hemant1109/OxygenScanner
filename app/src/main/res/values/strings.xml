@@ -4,6 +4,8 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
+    <string name="action_register">Register</string>
+
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
@@ -11,4 +13,6 @@
     <string name="login_failed">"Login failed"</string>
     <string name="scan_again">Scan Again</string>
     <string name="stop_scan">Stop scan</string>
+    <string name="firstname">First Name</string>
+    <string name="lastname">Last Name</string>
 </resources>
