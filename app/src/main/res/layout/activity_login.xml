@@ -6,27 +6,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.login.LoginActivity">
+    <!--https://www.iconfinder.com/search/?q=health&price=free-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:padding="20dp"
         android:gravity="center">
+
+        <ImageView
+            android:id="@+id/img_oxymeter"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_oxymeter_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:padding="10dp"
             android:hint="@string/prompt_email"
             android:inputType="textEmailAddress"
-            android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/img_oxymeter"
+            android:layout_marginTop="20dp"
+
+            />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/password"
@@ -42,19 +57,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/username" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:backgroundTint="@color/teal_700"
-            android:enabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:layout_margin="10dp"
+            android:gravity="center"
+            android:background="@drawable/button_gradient"
             android:text="@string/action_sign_in"
             android:textColor="@color/white"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@+id/password"
             app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/loading" />
+            app:layout_constraintTop_toBottomOf="@+id/password" />
 
         <ProgressBar
             android:id="@+id/loading"

@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.hardware.Camera
 import android.view.SurfaceHolder
 import android.view.View
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.oxygenscanner.ui.login.LoginActivity
@@ -39,7 +40,7 @@ class StartVitalSigns : AppCompatActivity() {
                 REQUEST_READ_PHONE_STATE
             )
         }
-        val VS = findViewById<ImageButton>(R.id.StartVS)
+        val VS = findViewById<AppCompatButton>(R.id.StartVS)
         VS.setOnClickListener { v: View ->
             startO2ScanActivity()
         }
