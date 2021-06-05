@@ -59,7 +59,7 @@
             />
 
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/mobileNumber"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -74,7 +74,7 @@
             />
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/password"
+            android:id="@+id/otp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -85,10 +85,10 @@
             android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
+            app:layout_constraintTop_toBottomOf="@+id/mobileNumber" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/login"
+            android:id="@+id/sendAndVerifyOtp"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="10dp"
@@ -97,9 +97,9 @@
             android:text="@string/action_register"
             android:textColor="@color/white"
             android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintEnd_toEndOf="@+id/otp"
+            app:layout_constraintStart_toStartOf="@+id/otp"
+            app:layout_constraintTop_toBottomOf="@+id/otp" />
 
         <ProgressBar
             android:id="@+id/loading"
@@ -109,8 +109,8 @@
             android:layout_margin="10dp"
             android:progressBackgroundTint="@color/teal_200"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintEnd_toEndOf="@+id/otp"
+            app:layout_constraintStart_toStartOf="@+id/otp"
+            app:layout_constraintTop_toBottomOf="@+id/otp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

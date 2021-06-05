@@ -29,13 +29,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/mobileNumber"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:padding="10dp"
-            android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress"
+            android:hint="@string/mobile_number"
+            android:inputType="phone"
+            android:maxLength="10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/img_oxymeter"
@@ -44,32 +45,32 @@
             />
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/password"
+            android:id="@+id/otp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="@string/prompt_password"
-            android:imeActionLabel="@string/action_sign_in_short"
+            android:hint="@string/enter_otp"
             android:imeOptions="actionDone"
-            android:inputType="textPassword"
+            android:inputType="number"
             android:selectAllOnFocus="true"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
+            app:layout_constraintTop_toBottomOf="@+id/mobileNumber" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/login"
+            android:id="@+id/sendAndVerifyOtp"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:gravity="center"
             android:background="@drawable/button_gradient"
-            android:text="@string/action_sign_in"
+            android:text="@string/send_otp"
             android:textColor="@color/white"
             android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintEnd_toEndOf="@+id/otp"
+            app:layout_constraintStart_toStartOf="@+id/otp"
+            app:layout_constraintTop_toBottomOf="@+id/otp" />
 
         <ProgressBar
             android:id="@+id/loading"
@@ -79,8 +80,8 @@
             android:layout_margin="10dp"
             android:progressBackgroundTint="@color/teal_200"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintEnd_toEndOf="@+id/otp"
+            app:layout_constraintStart_toStartOf="@+id/otp"
+            app:layout_constraintTop_toBottomOf="@+id/otp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
