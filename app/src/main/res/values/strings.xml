@@ -13,10 +13,12 @@
     <string name="login_failed">"Login failed"</string>
     <string name="scan_again">Scan Again</string>
     <string name="stop_scan">Stop scan</string>
-    <string name="firstname">First Name</string>
+    <string name="fullName">Full Name</string>
     <string name="lastname">Last Name</string>
     <string name="start">Start</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="enter_otp">Enter Otp</string>
     <string name="send_otp">Send Otp</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.oxygenscanner.databinding.ActivityLoginBinding
 import com.example.oxygenscanner.ui.startvitalsign.StartVitalSigns
+import com.example.oxygenscanner.util.ViewModelFactory
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -45,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
         val btnSendAndVerifyOtp = binding.sendAndVerifyOtp
         val loading = binding.loading
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
+        loginViewModel = ViewModelProvider(this, ViewModelFactory())
             .get(LoginViewModel::class.java)
 
 

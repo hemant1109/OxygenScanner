@@ -4,16 +4,12 @@ import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.oxygenscanner.R
-import android.widget.ImageButton
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.hardware.Camera
-import android.view.SurfaceHolder
 import android.view.View
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.oxygenscanner.ui.login.LoginActivity
 import com.example.oxygenscanner.ui.o2scan.O2Process
 
 class StartVitalSigns : AppCompatActivity() {
