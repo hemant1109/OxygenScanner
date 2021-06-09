@@ -1,9 +1,9 @@
 package com.example.oxygenscanner.data
 
-import com.example.oxygenscanner.data.model.LoggedInUser
 import com.example.oxygenscanner.data.model.User
 import com.example.oxygenscanner.util.FireStoreDB
 import java.io.IOException
+
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -15,6 +15,7 @@ class RegisterDataSource {
             FireStoreDB.registerUser(user)
             Result.Success(user)
         } catch (e: Throwable) {
+            e.printStackTrace()
             Result.Error(IOException("Error logging in", e))
         }
     }

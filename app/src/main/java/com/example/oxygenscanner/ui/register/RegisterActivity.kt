@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.example.oxygenscanner.data.Result
 import com.example.oxygenscanner.data.model.User
@@ -16,7 +17,7 @@ import com.google.firebase.FirebaseApp
 
 class RegisterActivity : AppCompatActivity() {
 
-    private val gender: String? = null
+    private var gender: String? = null
     private lateinit var registerViewModel: RegisterViewModel
     private lateinit var binding: ActivityRegisterBinding
 
@@ -33,12 +34,23 @@ class RegisterActivity : AppCompatActivity() {
         val rbMale = binding.rbMale
         val rbFemale = binding.rbFemale
         val loading = binding.loading
-
+        rbMale.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                gender = "Male"
+            }
+        }
+        rbFemale.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                gender = "Female"
+            }
+        }
         registerViewModel = ViewModelProvider(this, ViewModelFactory())
             .get(RegisterViewModel::class.java)
 
 
         btnRegister.setOnClickListener {
+            btnRegister.isVisible = false
+            loading.isVisible = true
             registerViewModel.register(
                 User(
                     fullName = edtFullName.text.toString(),
@@ -50,6 +62,8 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         registerViewModel.registerLiveData.observe(this@RegisterActivity, {
+            btnRegister.isVisible = true
+            loading.isVisible = false
             if (it is Result.Success) {
                 startLoginActivity()
             } else if (it is Result.Error) {

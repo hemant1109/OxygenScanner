@@ -12,9 +12,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.oxygenscanner.databinding.ActivityLoginBinding
+import com.example.oxygenscanner.ui.register.RegisterActivity
 import com.example.oxygenscanner.ui.startvitalsign.StartVitalSigns
 import com.example.oxygenscanner.util.ViewModelFactory
-import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -31,13 +31,12 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var edtMobileNumber: EditText
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
-    lateinit var auth:FirebaseAuth
+    lateinit var auth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this)
         auth = FirebaseAuth.getInstance()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -49,14 +48,17 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel = ViewModelProvider(this, ViewModelFactory())
             .get(LoginViewModel::class.java)
 
-
+        binding.tvRegister.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
         btnSendAndVerifyOtp.setOnClickListener {
             if (btnSendAndVerifyOtp.text == "Send Otp") {
                 loginViewModel.sendOtp(this, edtMobileNumber.text.toString(), callbacks)
-            }else{
-                val credential = PhoneAuthProvider.getCredential(storedVerificationId!!, edtOtp.text.toString())
+            } else {
+                val credential =
+                    PhoneAuthProvider.getCredential(storedVerificationId, edtOtp.text.toString())
                 signInWithPhoneAuthCredential(credential)
-            ///loginViewModel.verifyOtp( this@LoginActivity,edtMobileNumber.text.toString(),edtOtp.text.toString())
+                ///loginViewModel.verifyOtp( this@LoginActivity,edtMobileNumber.text.toString(),edtOtp.text.toString())
             }
         }
 
@@ -119,7 +121,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-
     }
 
     private fun startVitalSignActivity() {
@@ -147,7 +148,8 @@ class LoginActivity : AppCompatActivity() {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         // The verification code entered was invalid
-                        Toast.makeText(applicationContext, "Code is invalid", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Code is invalid", Toast.LENGTH_SHORT)
+                            .show()
 
                     }
                     // Update UI
