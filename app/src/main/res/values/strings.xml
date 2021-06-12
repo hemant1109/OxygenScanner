@@ -22,4 +22,11 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="need_to_signup">Click to signup?</string>
+    <string name="enter_mobile_number">Ente mobile number</string>
+    <string name="enter_valid_phone_number">Enter valid mobile number</string>
+    <string name="select_gender">Select gender</string>
+    <string name="enter_email_address">Enter email address</string>
+    <string name="enter_full_name">Enter full name</string>
+    <string name="register_sucesffuly">register successfully, you can login now.</string>
+    <string name="opt_send">Otp send successfully</string>
 </resources>

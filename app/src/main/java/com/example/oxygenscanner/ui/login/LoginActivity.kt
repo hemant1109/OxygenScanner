@@ -11,9 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.oxygenscanner.R
 import com.example.oxygenscanner.databinding.ActivityLoginBinding
 import com.example.oxygenscanner.ui.register.RegisterActivity
 import com.example.oxygenscanner.ui.startvitalsign.StartVitalSigns
+import com.example.oxygenscanner.util.Util
 import com.example.oxygenscanner.util.ViewModelFactory
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -52,25 +54,39 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
         btnSendAndVerifyOtp.setOnClickListener {
-            if (btnSendAndVerifyOtp.text == "Send Otp") {
-                loginViewModel.sendOtp(this, edtMobileNumber.text.toString(), callbacks)
-            } else {
-                val credential =
-                    PhoneAuthProvider.getCredential(storedVerificationId, edtOtp.text.toString())
-                signInWithPhoneAuthCredential(credential)
-                ///loginViewModel.verifyOtp( this@LoginActivity,edtMobileNumber.text.toString(),edtOtp.text.toString())
+            if (Util.mobileValidation(edtMobileNumber, resources)) {
+                if (btnSendAndVerifyOtp.text == "Send Otp") {
+                    loading.visibility = View.VISIBLE
+                    btnSendAndVerifyOtp.visibility = View.INVISIBLE
+                    loginViewModel.sendOtp(this, edtMobileNumber.text.toString(), callbacks)
+                } else {
+                    if (Util.checkBlankValidation(edtOtp, resources.getString(R.string.enter_otp))) {
+                        loading.visibility = View.VISIBLE
+                        btnSendAndVerifyOtp.visibility = View.INVISIBLE
+                        val credential =
+                            PhoneAuthProvider.getCredential(
+                                storedVerificationId,
+                                edtOtp.text.toString()
+                            )
+                        signInWithPhoneAuthCredential(credential)
+                        ///loginViewModel.verifyOtp( this@LoginActivity,edtMobileNumber.text.toString(),edtOtp.text.toString())
+                    }
+
+                }
             }
+
         }
 
         loginViewModel.otpSend.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
             if (loginResult) {
-                loading.visibility = View.GONE
                 btnSendAndVerifyOtp.text = "Verify Otp"
                 edtOtp.visibility = View.VISIBLE
             } else {
                 showLoginFailed("Please try agian later")
             }
+            loading.visibility = View.GONE
+            btnSendAndVerifyOtp.visibility = View.VISIBLE
 
         })
 
@@ -84,6 +100,8 @@ class LoginActivity : AppCompatActivity() {
                 //     detect the incoming verification SMS and perform verification without
                 //     user action.
                 Log.d(TAG, "onVerificationCompleted:$credential")
+                loading.visibility = View.GONE
+                btnSendAndVerifyOtp.visibility = View.VISIBLE
 
             }
 
@@ -109,10 +127,10 @@ class LoginActivity : AppCompatActivity() {
                 // now need to ask the user to enter the code and then construct a credential
                 // by combining the code with a verification ID.
                 Log.d(TAG, "onCodeSent:$verificationId")
-                Toast.makeText(this@LoginActivity, "Otp send successfully", Toast.LENGTH_SHORT)
-                    .show()
+                Util.showToast(this@LoginActivity,resources.getString(R.string.opt_send))
                 loading.visibility = View.GONE
                 btnSendAndVerifyOtp.text = "Verify Otp"
+                btnSendAndVerifyOtp.visibility = View.VISIBLE
                 edtOtp.visibility = View.VISIBLE
                 // Save verification ID and resending token so we can use them later
                 storedVerificationId = verificationId
@@ -131,7 +149,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showLoginFailed(errorString: String) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+        Util.showToast(applicationContext, errorString)
     }
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
@@ -140,17 +158,15 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    Toast.makeText(applicationContext, "Login In", Toast.LENGTH_SHORT).show()
-                    val user = task.result?.user
+                    Util.showToast(applicationContext, "Welcome")
+                    ///val user = task.result?.user
                     startVitalSignActivity()
                 } else {
                     // Sign in failed, display a message and update the UI
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         // The verification code entered was invalid
-                        Toast.makeText(applicationContext, "Code is invalid", Toast.LENGTH_SHORT)
-                            .show()
-
+                            Util.showToast(applicationContext, "Code is invalid")
                     }
                     // Update UI
                 }

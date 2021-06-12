@@ -9,7 +9,7 @@
     tools:context=".ui.register.RegisterActivity">
     <!--https://www.iconfinder.com/search/?q=health&price=free-->
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_oxymeter"
         android:layout_width="200dp"
         android:layout_height="200dp"
@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/fullName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
 
         />
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/mobileNumber"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -62,6 +62,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mobileNumber" />
 
+    <RadioGroup
+        android:id="@+id/radioGrp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email"
+        android:orientation="horizontal">
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/rbMale"
         android:layout_width="wrap_content"
@@ -69,8 +76,7 @@
         android:layout_margin="10dp"
         android:paddingEnd="10dp"
         android:text="@string/male"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        />
 
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/rbFemale"
@@ -80,16 +86,15 @@
         android:layout_marginTop="8dp"
         android:paddingEnd="10dp"
         android:text="@string/female"
-        app:layout_constraintStart_toEndOf="@+id/rbMale"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
-
+        />
+    </RadioGroup>
     <Space
         android:id="@+id/space"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rbFemale" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGrp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/register"
