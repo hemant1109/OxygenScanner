@@ -21,4 +21,13 @@ class RegisterViewModel(private val registerRepository: RegisterRepository) : Vi
             _registerLiveData.postValue(registerRepository.register(user))
         }
     }
+    private val _mobileExist = MutableLiveData<Result<Boolean>>()
+    val mobileExist: LiveData<Result<Boolean>> = _mobileExist
+
+    fun checkMobileExist(mobileNumber: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _mobileExist.postValue(registerRepository.checkMobileExist(mobileNumber))
+        }
+    }
+
 }

@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.oxygenscanner.data.LoginRepository
+import com.example.oxygenscanner.util.FireStoreDB
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
@@ -35,5 +38,18 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             .setActivity(activity)                 // Activity (for callback binding)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
+    }
+
+    private val _mobileExist = MutableLiveData<Boolean>()
+    val mobileExist: LiveData<Boolean> = _mobileExist
+
+    fun checkMobileExist(mobileNumber: String) {
+        viewModelScope.launch {
+            try {
+                _mobileExist.postValue(FireStoreDB.checkMobileExist(mobileNumber))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

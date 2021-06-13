@@ -12,4 +12,10 @@ class RegisterRepository(private val dataSource: RegisterDataSource) {
         // handle login
         return dataSource.register(user)
     }
+
+    suspend fun checkMobileExist(mobileNumber: String): Result<Boolean> {
+        // handle login
+        return dataSource.checkMobileExist(mobileNumber)
+    }
+
 }

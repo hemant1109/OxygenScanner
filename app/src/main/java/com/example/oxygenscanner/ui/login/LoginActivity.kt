@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.Observer
@@ -53,14 +52,27 @@ class LoginActivity : AppCompatActivity() {
         binding.tvRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
+        loginViewModel.mobileExist.observe(this, {
+            if (it) {
+                loginViewModel.sendOtp(this, edtMobileNumber.text.toString(), callbacks)
+            } else {
+                loading.visibility = View.VISIBLE
+                btnSendAndVerifyOtp.visibility = View.INVISIBLE
+                Util.showToast(applicationContext, "Please register this mobile number.")
+            }
+        })
         btnSendAndVerifyOtp.setOnClickListener {
             if (Util.mobileValidation(edtMobileNumber, resources)) {
                 if (btnSendAndVerifyOtp.text == "Send Otp") {
                     loading.visibility = View.VISIBLE
                     btnSendAndVerifyOtp.visibility = View.INVISIBLE
-                    loginViewModel.sendOtp(this, edtMobileNumber.text.toString(), callbacks)
+                    loginViewModel.checkMobileExist(edtMobileNumber.text.toString())
                 } else {
-                    if (Util.checkBlankValidation(edtOtp, resources.getString(R.string.enter_otp))) {
+                    if (Util.checkBlankValidation(
+                            edtOtp,
+                            resources.getString(R.string.enter_otp)
+                        )
+                    ) {
                         loading.visibility = View.VISIBLE
                         btnSendAndVerifyOtp.visibility = View.INVISIBLE
                         val credential =
@@ -80,10 +92,10 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.otpSend.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
             if (loginResult) {
-                btnSendAndVerifyOtp.text = "Verify Otp"
+                btnSendAndVerifyOtp.text = getString(R.string.verify_otp)
                 edtOtp.visibility = View.VISIBLE
             } else {
-                showLoginFailed("Please try agian later")
+                showLoginFailed("Please try again later")
             }
             loading.visibility = View.GONE
             btnSendAndVerifyOtp.visibility = View.VISIBLE
@@ -127,9 +139,9 @@ class LoginActivity : AppCompatActivity() {
                 // now need to ask the user to enter the code and then construct a credential
                 // by combining the code with a verification ID.
                 Log.d(TAG, "onCodeSent:$verificationId")
-                Util.showToast(this@LoginActivity,resources.getString(R.string.opt_send))
+                Util.showToast(this@LoginActivity, resources.getString(R.string.opt_send))
                 loading.visibility = View.GONE
-                btnSendAndVerifyOtp.text = "Verify Otp"
+                btnSendAndVerifyOtp.text = getString(R.string.verify_otp)
                 btnSendAndVerifyOtp.visibility = View.VISIBLE
                 edtOtp.visibility = View.VISIBLE
                 // Save verification ID and resending token so we can use them later
@@ -166,7 +178,7 @@ class LoginActivity : AppCompatActivity() {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
                         // The verification code entered was invalid
-                            Util.showToast(applicationContext, "Code is invalid")
+                        Util.showToast(applicationContext, "Code is invalid")
                     }
                     // Update UI
                 }
