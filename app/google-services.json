@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "414918853946",
+    "firebase_url": "https://o2-checker-default-rtdb.firebaseio.com",
     "project_id": "o2-checker",
     "storage_bucket": "o2-checker.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "414918853946-jahqg4galfkgpgnu2h4m9eeciqeqmb1b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.oxygenscanner",
+            "certificate_hash": "cc4bf6e65c90d1b43200355f6e40bba0afeb7184"
+          }
+        },
         {
           "client_id": "414918853946-rnibv8uf1uvjem6jhllsfj7e1h88031o.apps.googleusercontent.com",
           "client_type": 1,

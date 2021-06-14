@@ -2,12 +2,16 @@ package com.example.oxygenscanner.ui.login
 
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.oxygenscanner.R
@@ -26,6 +30,11 @@ import com.google.firebase.auth.PhoneAuthProvider
 
 class LoginActivity : AppCompatActivity() {
 
+    private val MOBILE_NUMBER: String = "mobileNumber"
+    private var sharedPreferences: SharedPreferences? = null
+    private lateinit var edtOtp: AppCompatEditText
+    private lateinit var loading: ProgressBar
+    private lateinit var btnSendAndVerifyOtp: AppCompatButton
     private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     private lateinit var storedVerificationId: String
@@ -33,31 +42,37 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
     lateinit var auth: FirebaseAuth
-
+    var IS_LOGGED_IN = "is_logged_in"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
+        sharedPreferences = getSharedPreferences(packageName, MODE_PRIVATE)
+        if (sharedPreferences?.getBoolean(IS_LOGGED_IN, false) == true) {
+            startVitalSignActivity()
+        }
         auth = FirebaseAuth.getInstance()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         edtMobileNumber = binding.mobileNumber
-        val edtOtp = binding.otp
-        val btnSendAndVerifyOtp = binding.sendAndVerifyOtp
-        val loading = binding.loading
+        edtOtp = binding.otp
+        btnSendAndVerifyOtp = binding.sendAndVerifyOtp
+        loading = binding.loading
 
         loginViewModel = ViewModelProvider(this, ViewModelFactory())
             .get(LoginViewModel::class.java)
 
         binding.tvRegister.setOnClickListener {
+            edtMobileNumber.text.clear()
+            edtOtp.text?.clear()
             startActivity(Intent(this, RegisterActivity::class.java))
         }
         loginViewModel.mobileExist.observe(this, {
             if (it) {
                 loginViewModel.sendOtp(this, edtMobileNumber.text.toString(), callbacks)
             } else {
-                loading.visibility = View.VISIBLE
-                btnSendAndVerifyOtp.visibility = View.INVISIBLE
+                loading.visibility = View.INVISIBLE
+                btnSendAndVerifyOtp.visibility = View.VISIBLE
                 Util.showToast(applicationContext, "Please register this mobile number.")
             }
         })
@@ -121,7 +136,8 @@ class LoginActivity : AppCompatActivity() {
                 // This callback is invoked in an invalid request for verification is made,
                 // for instance if the the phone number format is not valid.
                 Log.w(TAG, "onVerificationFailed", e)
-
+                loading.visibility = View.GONE
+                btnSendAndVerifyOtp.visibility = View.VISIBLE
                 if (e is FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                 } else if (e is FirebaseTooManyRequestsException) {
@@ -149,13 +165,11 @@ class LoginActivity : AppCompatActivity() {
                 resendToken = token
             }
         }
-
-
     }
 
     private fun startVitalSignActivity() {
         val i = Intent(this, StartVitalSigns::class.java)
-        i.putExtra("Usr", edtMobileNumber.text.toString())
+        i.putExtra("Usr", sharedPreferences?.getString(MOBILE_NUMBER, ""))
         startActivity(i)
         finish()
     }
@@ -172,8 +186,17 @@ class LoginActivity : AppCompatActivity() {
                     Log.d(TAG, "signInWithCredential:success")
                     Util.showToast(applicationContext, "Welcome")
                     ///val user = task.result?.user
+                    sharedPreferences?.edit()?.apply {
+                        putBoolean(IS_LOGGED_IN, binding.cbRememberMe.isChecked)
+                        putString(MOBILE_NUMBER, edtMobileNumber.text.toString())
+                        commit()
+                    }
+                    edtMobileNumber.text.clear()
+                    edtOtp.text?.clear()
                     startVitalSignActivity()
                 } else {
+                    loading.visibility = View.GONE
+                    btnSendAndVerifyOtp.visibility = View.VISIBLE
                     // Sign in failed, display a message and update the UI
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {

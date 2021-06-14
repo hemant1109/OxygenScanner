@@ -30,4 +30,6 @@
     <string name="register_sucesffuly">register successfully, you can login now.</string>
     <string name="opt_send">Otp send successfully</string>
     <string name="verify_otp">Verify Otp</string>
+    <string name="remember_me">remember me</string>
+    <string name="logout">Logout</string>
 </resources>
