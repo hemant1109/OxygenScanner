@@ -1,6 +1,7 @@
 package com.example.oxygenscanner.ui.o2scan
 
 import android.Manifest
+import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.util.Log
 import android.view.SurfaceHolder
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -20,10 +22,12 @@ import com.example.oxygenscanner.databinding.ActivityO2ProcessBinding
 import com.example.oxygenscanner.util.Util
 import com.example.oxygenscanner.util.imageprocessing.ImageProcessing.decodeYUV420SPtoRedBlueGreenAvg
 import com.example.oxygenscanner.util.math.Fft
+import com.google.android.gms.ads.AdRequest
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.ceil
 import kotlin.math.sqrt
+
 
 class O2Process : Activity() {
 
@@ -68,66 +72,19 @@ class O2Process : Activity() {
         previewHolder?.setKeepScreenOn(true)
         previewHolder?.addCallback(surfaceCallback)
         previewHolder?.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
-        binding.O2PB.max = secondsToScanning
+        //binding.O2PB.max = secondsToScanning
 
-        binding.O2PB.progress = 0
+        //binding.O2PB.progress = 0
         //binding.txtCountDown.text = ""
         // WakeLock Initialization : Forces the phone to stay On
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen")
+        val adRequest: AdRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
     }
 
-    //Wakelock + Open device camera + set orientation to 90 degree
-    //store system time as a start time for the analyzing process
-    //your activity to start interacting with the user.
-    // This is a good place to begin animations, open exclusive-access devices (such as the camera)
-    public override fun onResume() {
-        super.onResume()
-        val permissionCheck =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_PHONE_STATE),
-                REQUEST_READ_PHONE_STATE
-            )
-        } else {
-            wakeLock!!.acquire(10 * 60 * 1000L /*10 minutes*/)
-        }
-        //If authorisation not granted for camera
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) //ask for authorisation
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.CAMERA),
-                REQUEST_CAMERA
-            ) else {
-            //start your camera
-            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK)
-            camera?.setDisplayOrientation(90)
-            startTime = System.currentTimeMillis()
-        }
-    }
 
-    //call back the frames then release the camera + wakelock and Initialize the camera to null
-    //Called as part of the activity lifecycle when an activity is going into the background, but has not (yet) been killed. The counterpart to onResume().
-    //When activity B is launched in front of activity A,
-    // this callback will be invoked on A. B will not be created until A's onPause() returns, so be sure to not do anything lengthy here.
-    public override fun onPause() {
-        super.onPause()
-        Util.logD(msg = "O2Process onPause called")
-        if (wakeLock!!.isHeld)
-            wakeLock!!.release()
-        camera?.setPreviewCallback(null)
-        camera?.stopPreview()
-        camera?.release()
-        camera = null
-        Util.logD(msg = "O2Process camera null")
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -247,7 +204,7 @@ class O2Process : Activity() {
     }
 
     private fun updateProgress(totalTimeInSecs: Double) {
-        binding.O2PB.progress = ProgP/*(secondsToScanning - totalTimeInSecs.toInt())*/
+        //binding.O2PB.progress = ProgP/*(secondsToScanning - totalTimeInSecs.toInt())*/
         //binding.txtCountDown.text = (secondsToScanning - totalTimeInSecs.toInt()).toString()
     }
 
@@ -268,12 +225,20 @@ class O2Process : Activity() {
 
             camera?.parameters?.let { parameters ->
                 parameters.flashMode = Camera.Parameters.FLASH_MODE_TORCH
-                val size = getSmallestPreviewSize(width, height, parameters)
+                /*val size = getSmallestPreviewSize(width, height, parameters)
                 if (size != null) {
                     parameters.setPreviewSize(size.width, size.height)
                     Log.d(TAG, "Using width=" + size.width + " height=" + size.height)
                 }
-                camera?.parameters = parameters
+                camera?.parameters = parameters*/
+                val allSizes: MutableList<Camera.Size>? = parameters.getSupportedPictureSizes()
+                var size: Camera.Size? = allSizes?.get(0) // get top size
+
+                for (i in allSizes?.indices!!) {
+                    if (allSizes[i].width > size?.width!!) size = allSizes[i]
+                }
+                //set max Picture Size
+                size?.width?.let { parameters.setPictureSize(it, size.height) }
                 camera?.startPreview()
             }
         }
@@ -318,5 +283,64 @@ class O2Process : Activity() {
             }
             return result
         }
+    }
+
+    // Called before the activity is destroyed
+    public override fun onDestroy() {
+        binding.adView.destroy()
+        super.onDestroy()
+    }
+
+    //Wakelock + Open device camera + set orientation to 90 degree
+    //store system time as a start time for the analyzing process
+    //your activity to start interacting with the user.
+    // This is a good place to begin animations, open exclusive-access devices (such as the camera)
+    public override fun onResume() {
+        super.onResume()
+        binding.adView.resume()
+        val permissionCheck =
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_PHONE_STATE),
+                REQUEST_READ_PHONE_STATE
+            )
+        } else {
+            wakeLock!!.acquire(10 * 60 * 1000L /*10 minutes*/)
+        }
+        //If authorisation not granted for camera
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) //ask for authorisation
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                REQUEST_CAMERA
+            ) else {
+            //start your camera
+            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK)
+            camera?.setDisplayOrientation(90)
+            startTime = System.currentTimeMillis()
+        }
+    }
+
+    //call back the frames then release the camera + wakelock and Initialize the camera to null
+    //Called as part of the activity lifecycle when an activity is going into the background, but has not (yet) been killed. The counterpart to onResume().
+    //When activity B is launched in front of activity A,
+    // this callback will be invoked on A. B will not be created until A's onPause() returns, so be sure to not do anything lengthy here.
+    public override fun onPause() {
+        binding.adView.pause()
+        super.onPause()
+        Util.logD(msg = "O2Process onPause called")
+        if (wakeLock!!.isHeld)
+            wakeLock!!.release()
+        camera?.setPreviewCallback(null)
+        camera?.stopPreview()
+        camera?.release()
+        camera = null
+        Util.logD(msg = "O2Process camera null")
     }
 }

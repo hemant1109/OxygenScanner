@@ -3,56 +3,67 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="48dp"
-    android:paddingTop="16dp"
-    android:paddingRight="48dp"
+    android:paddingTop="32dp"
     android:paddingBottom="16dp"
     tools:context=".ui.startvitalsign.StartVitalSigns">
-
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_weight="0.10" />
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="match_parent"
         android:layout_height="156dp"
         android:adjustViewBounds="true"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/rsz_download" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_weight="0.14" />
+        android:layout_weight="0.10" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.87"
+        android:layout_weight="0.45"
         android:fontFamily="sans-serif-smallcaps"
         android:lineSpacingMultiplier="1.3"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
         android:text="- Lightly place your index finger on \n   the rear camera.\n- Make sure the camera is fully \n   covered. \n- Measure in a shaded environment. \n- Don't move your finger until the \n   measurement is complete. \n- Finally place your finger then press \n   start. "
         android:textColor="@color/teal_200"
         android:textSize="14sp"
         android:textStyle="bold" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/StartVS"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:background="@drawable/button_gradient"
+        android:gravity="center"
+        android:text="@string/start"
+        android:textColor="@color/white"
+        android:visibility="visible" />
     <Space
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_weight="0.17" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/StartVS"
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/button_gradient"
-        android:gravity="center"
-        android:text="@string/start"
-        android:textColor="@color/white"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/otp"
-        app:layout_constraintStart_toStartOf="@+id/otp"
-        app:layout_constraintTop_toBottomOf="@+id/otp" />
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        ads:adSize="BANNER"
+        android:layout_gravity="bottom"
+        ads:adUnitId="ca-app-pub-5927861732665872/3966044757" />
 </LinearLayout>
