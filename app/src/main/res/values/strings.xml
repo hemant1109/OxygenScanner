@@ -13,7 +13,23 @@
     <string name="login_failed">"Login failed"</string>
     <string name="scan_again">Scan Again</string>
     <string name="stop_scan">Stop scan</string>
-    <string name="firstname">First Name</string>
+    <string name="fullName">Full Name</string>
     <string name="lastname">Last Name</string>
     <string name="start">Start</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="enter_otp">Enter Otp</string>
+    <string name="send_otp">Send Otp</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="need_to_signup">Click to signup</string>
+    <string name="enter_mobile_number">Ente mobile number</string>
+    <string name="enter_valid_phone_number">Enter valid mobile number</string>
+    <string name="select_gender">Select gender</string>
+    <string name="enter_email_address">Enter email address</string>
+    <string name="enter_full_name">Enter full name</string>
+    <string name="register_sucesffuly">register successfully, you can login now.</string>
+    <string name="opt_send">Otp send successfully</string>
+    <string name="verify_otp">Verify Otp</string>
+    <string name="remember_me">remember me</string>
+    <string name="logout">Logout</string>
 </resources>

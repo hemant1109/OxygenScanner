@@ -5,18 +5,19 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".ui.register.RegisterActivity">
     >
     <!--https://www.iconfinder.com/search/?q=health&price=free-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="20dp"
-        android:gravity="center">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/img_oxymeter"
@@ -28,62 +29,87 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
+        <EditText
+            android:id="@+id/mobileNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/mobile_number"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_oxymeter"
+
+            />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/otp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="@string/enter_otp"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mobileNumber" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sendAndVerifyOtp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_gradient"
+            android:gravity="center"
+            android:text="@string/send_otp"
+            android:textColor="@color/white"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/otp"
+            app:layout_constraintStart_toStartOf="@+id/otp"
+            app:layout_constraintTop_toBottomOf="@+id/otp" />
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:progressBackgroundTint="@color/teal_200"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/otp"
+            app:layout_constraintStart_toStartOf="@+id/otp"
+            app:layout_constraintTop_toBottomOf="@+id/otp" />
+
+        <CheckBox
+            android:id="@+id/cb_remember_me"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/img_oxymeter"
-            app:layout_constraintStart_toStartOf="@+id/img_oxymeter"
-            app:layout_constraintTop_toBottomOf="@+id/img_oxymeter"
-            android:layout_marginTop="20dp"
-            tools:context=".MainActivity">
+            android:padding="5dp"
+            android:text="@string/remember_me"
+            android:textColor="#364F6B"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/sendAndVerifyOtp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/sendAndVerifyOtp"
+            app:layout_constraintTop_toBottomOf="@+id/sendAndVerifyOtp" />
 
-            <!--Edittext for getting users phone number-->
-            <EditText
-                android:id="@+id/idEdtPhoneNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="10dp"
-                android:hint="Enter your phone"
-                android:importantForAutofill="no"
-                android:inputType="phone" />
-
-            <!--Button for getting OTP-->
-            <Button
-                android:id="@+id/btnGetOtp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/idEdtPhoneNumber"
-                android:layout_margin="10dp"
-                android:text="Get OTP"
-                android:textColor="@color/white"
-                android:textAllCaps="false" />
-
-            <!--Edittext for getting otp from user-->
-            <EditText
-                android:id="@+id/idEdtOtp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/btnGetOtp"
-                android:layout_margin="10dp"
-                android:hint="Enter OTP"
-                android:importantForAutofill="no"
-                android:inputType="phone" />
-
-            <!--button for verifying user OTP-->
-            <Button
-                android:id="@+id/idBtnVerify"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/idEdtOtp"
-                android:layout_margin="10dp"
-                android:text="Verify OTP"
-                android:textColor="@color/white"
-                android:enabled="false"
-                android:textAllCaps="false" />
-
-        </RelativeLayout>
-
-
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:padding="8dp"
+            android:text="@string/need_to_signup"
+            android:textColor="#364F6B"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/cb_remember_me"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cb_remember_me"
+            app:layout_constraintTop_toBottomOf="@+id/cb_remember_me" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

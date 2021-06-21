@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import com.example.oxygenscanner.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -24,7 +25,7 @@ class O2Result : AppCompatActivity() {
         setContentView(R.layout.activity_o2_result)
         Date = df.format(today)
         val RO2 = findViewById<TextView>(R.id.O2R)
-        val SO2 = findViewById<ImageButton>(R.id.SendO2)
+        val SO2 = findViewById<AppCompatButton>(R.id.SendO2)
         val bundle = intent.extras
         if (bundle != null) {
             O2 = bundle.getInt("O2R")

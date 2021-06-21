@@ -1,55 +1,55 @@
 package com.example.oxygenscanner.ui.login
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
+import androidx.lifecycle.viewModelScope
 import com.example.oxygenscanner.data.LoginRepository
-import com.example.oxygenscanner.data.Result
-
-import com.example.oxygenscanner.R
+import com.example.oxygenscanner.util.FireStoreDB
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
-    private val _loginForm = MutableLiveData<LoginFormState>()
-    val loginFormState: LiveData<LoginFormState> = _loginForm
 
-    private val _loginResult = MutableLiveData<LoginResult>()
-    val loginResult: LiveData<LoginResult> = _loginResult
+    private val _otpSend = MutableLiveData<Boolean>()
+    val otpSend: LiveData<Boolean> = _otpSend
+    fun sendOtp(
+        activity: AppCompatActivity,
+        mobileNumber: String,
+        callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    ) {
+        val options = PhoneAuthOptions.newBuilder()
+            .setPhoneNumber("+91$mobileNumber")       // Phone number to verify
+            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+            .setActivity(activity)                 // Activity (for callback binding)
+            .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
 
-    fun login(username: String, password: String) {
-        // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
-
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
-        }
     }
 
-    fun loginDataChanged(username: String, password: String) {
-        if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
-        } else {
-            _loginForm.value = LoginFormState(isDataValid = true)
-        }
+    fun verifyOtp(activity: AppCompatActivity, mobileNumber: String, otp: String) {
+        val options = PhoneAuthOptions.newBuilder()
+            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+            .setActivity(activity)                 // Activity (for callback binding)
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    // A placeholder username validation check
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            username.isNotBlank()
-        }
-    }
+    private val _mobileExist = MutableLiveData<Boolean>()
+    val mobileExist: LiveData<Boolean> = _mobileExist
 
-    // A placeholder password validation check
-    private fun isPasswordValid(password: String): Boolean {
-        return password.length > 5
+    fun checkMobileExist(mobileNumber: String) {
+        viewModelScope.launch {
+            try {
+                _mobileExist.postValue(FireStoreDB.checkMobileExist(mobileNumber))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }
