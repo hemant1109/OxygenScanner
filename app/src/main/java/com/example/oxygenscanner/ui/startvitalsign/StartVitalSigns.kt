@@ -48,38 +48,38 @@ class StartVitalSigns : AppCompatActivity() {
         VS.setOnClickListener { v: View ->
             startO2ScanActivity()
         }
-        adView = findViewById<AdView>(R.id.adView)
+        adView = findViewById(R.id.adView)
         val adRequest: AdRequest = AdRequest.Builder().build()
-        adView?.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                Log.d("adView","adView onAdLoaded")
-            }
-
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                // Code to be executed when an ad request fails.
-                Log.d("adView","adView onAdFailedToLoad ${adError.message}")
-                Log.d("adView","adView onAdFailedToLoad ${adError.cause?.message}")
-                Log.d("adView","adView onAdFailedToLoad ${adError.cause?.domain}")
-            }
-
-            override fun onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-                Log.d("adView","adView onAdOpened")
-
-            }
-
-            override fun onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-                Log.d("adView","adView onAdClicked")
-            }
-
-            override fun onAdClosed() {
-                Log.d("adView","adView onAdClosed")
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        }
+//        adView?.adListener = object : AdListener() {
+//            override fun onAdLoaded() {
+//                Log.d("adView","adView onAdLoaded")
+//            }
+//
+//            override fun onAdFailedToLoad(adError: LoadAdError) {
+//                // Code to be executed when an ad request fails.
+//                Log.d("adView","adView onAdFailedToLoad ${adError.message}")
+//                Log.d("adView","adView onAdFailedToLoad ${adError.cause?.message}")
+//                Log.d("adView","adView onAdFailedToLoad ${adError.cause?.domain}")
+//            }
+//
+//            override fun onAdOpened() {
+//                // Code to be executed when an ad opens an overlay that
+//                // covers the screen.
+//                Log.d("adView","adView onAdOpened")
+//
+//            }
+//
+//            override fun onAdClicked() {
+//                // Code to be executed when the user clicks on an ad.
+//                Log.d("adView","adView onAdClicked")
+//            }
+//
+//            override fun onAdClosed() {
+//                Log.d("adView","adView onAdClosed")
+//                // Code to be executed when the user is about to return
+//                // to the app after tapping on an ad.
+//            }
+//        }
         adView?.loadAd(adRequest)
     }
 

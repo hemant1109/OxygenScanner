@@ -54,7 +54,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-5927861732665872~3966044757"/> <!--aa change karvanu chee-->
+            android:value="ca-app-pub-5927861732665872~4595116142"/> <!--aa change karvanu chee-->
     </application>
 
 </manifest>

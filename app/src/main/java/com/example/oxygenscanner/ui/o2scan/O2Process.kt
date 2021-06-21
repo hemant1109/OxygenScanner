@@ -1,7 +1,6 @@
 package com.example.oxygenscanner.ui.o2scan
 
 import android.Manifest
-import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -13,7 +12,6 @@ import android.os.PowerManager
 import android.os.PowerManager.WakeLock
 import android.util.Log
 import android.view.SurfaceHolder
-import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -72,9 +70,9 @@ class O2Process : Activity() {
         previewHolder?.setKeepScreenOn(true)
         previewHolder?.addCallback(surfaceCallback)
         previewHolder?.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
-        //binding.O2PB.max = secondsToScanning
+        binding.O2PB.max = secondsToScanning
 
-        //binding.O2PB.progress = 0
+        binding.O2PB.progress = 0
         //binding.txtCountDown.text = ""
         // WakeLock Initialization : Forces the phone to stay On
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -83,7 +81,6 @@ class O2Process : Activity() {
         val adRequest: AdRequest = AdRequest.Builder().build()
         binding.adView.loadAd(adRequest)
     }
-
 
 
     override fun onRequestPermissionsResult(
@@ -204,7 +201,7 @@ class O2Process : Activity() {
     }
 
     private fun updateProgress(totalTimeInSecs: Double) {
-        //binding.O2PB.progress = ProgP/*(secondsToScanning - totalTimeInSecs.toInt())*/
+        binding.O2PB.progress = ProgP/*(secondsToScanning - totalTimeInSecs.toInt())*/
         //binding.txtCountDown.text = (secondsToScanning - totalTimeInSecs.toInt()).toString()
     }
 
@@ -229,8 +226,8 @@ class O2Process : Activity() {
                 if (size != null) {
                     parameters.setPreviewSize(size.width, size.height)
                     Log.d(TAG, "Using width=" + size.width + " height=" + size.height)
-                }
-                camera?.parameters = parameters*/
+                }*/
+                camera?.parameters = parameters
                 val allSizes: MutableList<Camera.Size>? = parameters.getSupportedPictureSizes()
                 var size: Camera.Size? = allSizes?.get(0) // get top size
 
