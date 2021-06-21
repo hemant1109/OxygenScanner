@@ -39,7 +39,6 @@
         <activity
             android:name=".ui.startvitalsign.StartVitalSigns"
             android:label="@string/app_name" />
-            android:label="@string/app_name"/>
         <activity
             android:name=".ui.register.RegisterActivity"
             android:label="@string/app_name"/>
@@ -53,9 +52,9 @@
             android:launchMode="singleInstance" />
 
         <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/> <!--aa change karvanu chee-->
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
+<!--            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/> &lt;!&ndash;aa change karvanu chee&ndash;&gt;-->
 
     </application>
 

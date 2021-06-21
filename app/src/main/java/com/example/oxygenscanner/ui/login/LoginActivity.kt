@@ -9,10 +9,9 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.lifecycle.Observer
@@ -21,23 +20,16 @@ import com.example.oxygenscanner.R
 import com.example.oxygenscanner.databinding.ActivityLoginBinding
 import com.example.oxygenscanner.ui.register.RegisterActivity
 import com.example.oxygenscanner.ui.startvitalsign.StartVitalSigns
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.tasks.TaskExecutors
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
-import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
-import java.util.concurrent.TimeUnit
 import com.example.oxygenscanner.util.Util
 import com.example.oxygenscanner.util.ViewModelFactory
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import java.util.concurrent.TimeUnit
 
 
 class LoginActivity : AppCompatActivity() {
@@ -52,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var storedVerificationId: String
     private lateinit var edtMobileNumber: EditText
     private lateinit var loginViewModel: LoginViewModel
+
     // variable for FirebaseAuth class
     private var mAuth: FirebaseAuth? = null
 
@@ -83,11 +76,11 @@ class LoginActivity : AppCompatActivity() {
         // of our FirebaseAuth.
         mAuth = FirebaseAuth.getInstance()
 
-        MobileAds.initialize(
+       /* MobileAds.initialize(
             this
         ) {
-///haji baki chee
-        }
+            ///haji baki chee
+        }*/
         edtMobileNumber = binding.mobileNumber
         edtOtp = binding.otp
         btnSendAndVerifyOtp = binding.sendAndVerifyOtp
@@ -199,29 +192,13 @@ class LoginActivity : AppCompatActivity() {
                 resendToken = token
             }
         }
-    }
-
-    private fun startVitalSignActivity() {
-        val i = Intent(this, StartVitalSigns::class.java)
-        i.putExtra("Usr", sharedPreferences?.getString(MOBILE_NUMBER, ""))
-        startActivity(i)
-        finish()
-    }
-
-    private fun showLoginFailed(errorString: String) {
-        Util.showToast(applicationContext, errorString)
-    }
         // initializing variables for button and Edittext.
-        edtPhone = binding.idEdtPhoneNumber
-        edtOTP = binding.idEdtOtp
-        verifyOTPBtn = binding.idBtnVerify
-        generateOTPBtn = binding.btnGetOtp
 
         // setting onclick listner for generate OTP button.
-        generateOTPBtn.setOnClickListener(View.OnClickListener {
+        generateOTPBtn.setOnClickListener {
             // below line is for checking weather the user
             // has entered his mobile number or not.
-            if (TextUtils.isEmpty(edtPhone.getText().toString())) {
+            if (TextUtils.isEmpty(edtPhone.text.toString())) {
                 // when mobile number text field is empty
                 // displaying a toast message.
                 Toast.makeText(
@@ -235,11 +212,11 @@ class LoginActivity : AppCompatActivity() {
                 val phone = "+91" + edtPhone.getText().toString()
                 sendVerificationCode(phone)
             }
-        })
+        }
 
         // initializing on click listener
         // for verify otp button
-        verifyOTPBtn.setOnClickListener(View.OnClickListener {
+        verifyOTPBtn.setOnClickListener {
             // validating if the OTP text field is empty or not.
             if (TextUtils.isEmpty(edtOTP.getText().toString())) {
                 // if the OTP text field is empty display
@@ -250,8 +227,31 @@ class LoginActivity : AppCompatActivity() {
                 // method to verify the OTP.
                 verifyCode(edtOTP.getText().toString())
             }
-        })
+        }
     }
+
+    // below method is use to verify code from Firebase.
+    private fun verifyCode(code: String) {
+        // below line is used for getting getting
+        // credentials from our verification id and code.
+        val credential = PhoneAuthProvider.getCredential(verificationId!!, code)
+
+        // after getting credential we are
+        // calling sign in method.
+        signInWithCredential(credential)
+    }
+
+    private fun startVitalSignActivity() {
+        val i = Intent(this, StartVitalSigns::class.java)
+        i.putExtra("Usr", sharedPreferences?.getString(MOBILE_NUMBER, ""))
+        startActivity(i)
+        finish()
+    }
+
+    private fun showLoginFailed(errorString: String) {
+        Util.showToast(applicationContext, errorString)
+    }
+
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -291,7 +291,7 @@ class LoginActivity : AppCompatActivity() {
                     // if the code is correct and the task is successful
                     // we are sending our user to new activity.
                     val i = Intent(this@LoginActivity, StartVitalSigns::class.java)
-                    i.putExtra("Usr", binding.idEdtPhoneNumber.text.toString())
+                    i.putExtra("Usr", binding.mobileNumber.text.toString())
                     startActivity(i)
                     finish()
                 } else {
@@ -302,7 +302,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
     }
-}
 
     private fun sendVerificationCode(number: String) {
         // this method is used for getting
@@ -313,66 +312,10 @@ class LoginActivity : AppCompatActivity() {
             // verification which is 60 seconds in our case.
             TimeUnit.SECONDS,  // third parameter is for initializing units
             // for time period which is in seconds in our case.
-            TaskExecutors.MAIN_THREAD,  // this task will be excuted on Main thread.
-            mCallBack // we are calling callback method when we recieve OTP for
+            this,  // this task will be excuted on Main thread.
+            callbacks // we are calling callback method when we recieve OTP for
             // auto verification of user.
         )
     }
 
-    // callback method is called on Phone auth provider.
-    private val   // initializing our callbacks for on
-    // verification callback method.
-            mCallBack: OnVerificationStateChangedCallbacks =
-        object : OnVerificationStateChangedCallbacks() {
-            // below method is used when
-            // OTP is sent from Firebase
-            override fun onCodeSent(s: String, forceResendingToken: ForceResendingToken) {
-                super.onCodeSent(s, forceResendingToken)
-                // when we receive the OTP it
-                // contains a unique id which
-                // we are storing in our string
-                // which we have already created.
-                verificationId = s
-            }
-
-            // this method is called when user
-            // receive OTP from Firebase.
-            override fun onVerificationCompleted(phoneAuthCredential: PhoneAuthCredential) {
-                // below line is used for getting OTP code
-                // which is sent in phone auth credentials.
-                val code = phoneAuthCredential.smsCode
-
-                // checking if the code
-                // is null or not.
-                if (code != null) {
-                    // if the code is not null then
-                    // we are setting that code to
-                    // our OTP edittext field.
-                    edtOTP!!.setText(code)
-
-                    // after setting this code
-                    // to OTP edittext field we
-                    // are calling our verifycode method.
-                    verifyCode(code)
-                }
-            }
-
-            // this method is called when firebase doesn't
-            // sends our OTP code due to any error or issue.
-            override fun onVerificationFailed(e: FirebaseException) {
-                // displaying error message with firebase exception.
-                Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_LONG).show()
-            }
-        }
-
-    // below method is use to verify code from Firebase.
-    private fun verifyCode(code: String) {
-        // below line is used for getting getting
-        // credentials from our verification id and code.
-        val credential = PhoneAuthProvider.getCredential(verificationId!!, code)
-
-        // after getting credential we are
-        // calling sign in method.
-        signInWithCredential(credential)
-    }
 }
