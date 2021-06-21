@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.login.LoginActivity">
+    >
     <!--https://www.iconfinder.com/search/?q=health&price=free-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,59 +28,62 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_oxymeter"
-            android:layout_marginTop="20dp"
-
-            />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/password"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:hint="@string/prompt_password"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/login"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:background="@drawable/button_gradient"
-            android:text="@string/action_sign_in"
-            android:textColor="@color/white"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
-
-        <ProgressBar
-            android:id="@+id/loading"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:progressBackgroundTint="@color/teal_200"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/password"
-            app:layout_constraintStart_toStartOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintEnd_toEndOf="@+id/img_oxymeter"
+            app:layout_constraintStart_toStartOf="@+id/img_oxymeter"
+            app:layout_constraintTop_toBottomOf="@+id/img_oxymeter"
+            android:layout_marginTop="20dp"
+            tools:context=".MainActivity">
+
+            <!--Edittext for getting users phone number-->
+            <EditText
+                android:id="@+id/idEdtPhoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:hint="Enter your phone"
+                android:importantForAutofill="no"
+                android:inputType="phone" />
+
+            <!--Button for getting OTP-->
+            <Button
+                android:id="@+id/btnGetOtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/idEdtPhoneNumber"
+                android:layout_margin="10dp"
+                android:text="Get OTP"
+                android:textColor="@color/white"
+                android:textAllCaps="false" />
+
+            <!--Edittext for getting otp from user-->
+            <EditText
+                android:id="@+id/idEdtOtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnGetOtp"
+                android:layout_margin="10dp"
+                android:hint="Enter OTP"
+                android:importantForAutofill="no"
+                android:inputType="phone" />
+
+            <!--button for verifying user OTP-->
+            <Button
+                android:id="@+id/idBtnVerify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/idEdtOtp"
+                android:layout_margin="10dp"
+                android:text="Verify OTP"
+                android:textColor="@color/white"
+                android:enabled="false"
+                android:textAllCaps="false" />
+
+        </RelativeLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

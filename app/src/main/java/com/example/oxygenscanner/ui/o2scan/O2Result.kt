@@ -9,7 +9,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.oxygenscanner.R
-import com.example.oxygenscanner.ui.login.LoginActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*

@@ -13,7 +13,6 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.oxygenscanner.ui.login.LoginActivity
 import com.example.oxygenscanner.ui.o2scan.O2Process
 
 class StartVitalSigns : AppCompatActivity() {

@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.oxygenscanner">
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.flash" />
 
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,15 +32,21 @@
         </activity>
         <activity
             android:name=".ui.startvitalsign.StartVitalSigns"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
         <activity
             android:name=".ui.o2scan.O2Process"
-            android:launchMode="singleInstance"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".ui.o2scan.O2Result"
-            android:launchMode="singleInstance"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name"
+            android:launchMode="singleInstance" />
+
+        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/> <!--aa change karvanu chee-->
+
     </application>
 
 </manifest>
