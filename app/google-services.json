@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "414918853946",
+    "project_id": "o2-checker",
+    "storage_bucket": "o2-checker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414918853946:android:e572d9341fa2c465187c03",
+        "android_client_info": {
+          "package_name": "com.example.oxygenscanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414918853946-lpb34l6no65p2v9hmtu56k78fsddq8fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB6fNCRmeQwFXaO0_7lwlx-CBq1vCFVfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414918853946-lpb34l6no65p2v9hmtu56k78fsddq8fj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
