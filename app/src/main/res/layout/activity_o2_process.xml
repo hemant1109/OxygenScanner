@@ -35,5 +35,5 @@
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-5927861732665872/3966044757" />
+        ads:adUnitId="@string/banner_unit_id" />
 </LinearLayout>
