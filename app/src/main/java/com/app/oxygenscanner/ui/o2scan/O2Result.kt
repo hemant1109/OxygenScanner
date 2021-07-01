@@ -114,7 +114,6 @@ class O2Result : AppCompatActivity() {
                 Log.d("onAdLoaded", "Ad was loaded.")
                 mInterstitialAd = interstitialAd
                 mAdIsLoading = false
-                Toast.makeText(this@O2Result, "onAdLoaded()", Toast.LENGTH_SHORT).show()
                 showInterstitial()
             }
         }

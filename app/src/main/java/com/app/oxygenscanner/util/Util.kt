@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
 object Util {
     fun logD(tag: String = BuildConfig.APPLICATION_ID, msg: String, tr: Throwable? = null) {
         if (tr != null)
-            Log.d(tag.substring(0, 22), msg, tr)
+            Log.d(tag, msg, tr)
         else
-            Log.d(tag.substring(0, 22), msg)
+            Log.d(tag, msg)
     }
 
     fun checkBlankValidation(editText: EditText, str: String): Boolean {
