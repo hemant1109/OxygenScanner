@@ -8,26 +8,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:414918853946:android:e572d9341fa2c465187c03",
+        "mobilesdk_app_id": "1:414918853946:android:fec11d6111aa6c18187c03",
         "android_client_info": {
-          "package_name": "com.example.oxygenscanner"
+          "package_name": "com.app.oxygenscanner"
         }
       },
       "oauth_client": [
         {
-          "client_id": "414918853946-jahqg4galfkgpgnu2h4m9eeciqeqmb1b.apps.googleusercontent.com",
+          "client_id": "414918853946-23rvo5ms7rmqd296bru01asko38tj4ol.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.oxygenscanner",
-            "certificate_hash": "cc4bf6e65c90d1b43200355f6e40bba0afeb7184"
+            "package_name": "com.app.oxygenscanner",
+            "certificate_hash": "96c0236da8979658638e6a3ca70d5f5bdd1b223f"
           }
         },
         {
-          "client_id": "414918853946-rnibv8uf1uvjem6jhllsfj7e1h88031o.apps.googleusercontent.com",
+          "client_id": "414918853946-al76tduf9j3pdh6o6r25ndr470c7s0m5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.oxygenscanner",
-            "certificate_hash": "96c0236da8979658638e6a3ca70d5f5bdd1b223f"
+            "package_name": "com.app.oxygenscanner",
+            "certificate_hash": "cc4bf6e65c90d1b43200355f6e40bba0afeb7184"
           }
         },
         {
