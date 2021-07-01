@@ -35,7 +35,6 @@ class RegisterActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
