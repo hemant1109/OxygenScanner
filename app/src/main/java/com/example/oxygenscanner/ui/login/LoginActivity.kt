@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
 
     // buttons for generating OTP and verifying OTP
     private lateinit var verifyOTPBtn: Button
-    private lateinit var generateOTPBtn: Button
+    private lateinit var sendAndVerifyOtp: Button
 
     // string for storing our verification ID
     private var verificationId: String? = null
@@ -76,16 +76,10 @@ class LoginActivity : AppCompatActivity() {
         // of our FirebaseAuth.
         mAuth = FirebaseAuth.getInstance()
 
-       /* MobileAds.initialize(
-            this
-        ) {
-            ///haji baki chee
-        }*/
         edtMobileNumber = binding.mobileNumber
         edtOtp = binding.otp
         btnSendAndVerifyOtp = binding.sendAndVerifyOtp
         loading = binding.loading
-
         loginViewModel = ViewModelProvider(this, ViewModelFactory())
             .get(LoginViewModel::class.java)
 
@@ -128,7 +122,6 @@ class LoginActivity : AppCompatActivity() {
 
                 }
             }
-
         }
 
         loginViewModel.otpSend.observe(this@LoginActivity, Observer {
@@ -192,53 +185,6 @@ class LoginActivity : AppCompatActivity() {
                 resendToken = token
             }
         }
-        // initializing variables for button and Edittext.
-
-        // setting onclick listner for generate OTP button.
-        generateOTPBtn.setOnClickListener {
-            // below line is for checking weather the user
-            // has entered his mobile number or not.
-            if (TextUtils.isEmpty(edtPhone.text.toString())) {
-                // when mobile number text field is empty
-                // displaying a toast message.
-                Toast.makeText(
-                    this@LoginActivity,
-                    "Please enter a valid phone number.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                // if the text field is not empty we are calling our
-                // send OTP method for getting OTP from Firebase.
-                val phone = "+91" + edtPhone.getText().toString()
-                sendVerificationCode(phone)
-            }
-        }
-
-        // initializing on click listener
-        // for verify otp button
-        verifyOTPBtn.setOnClickListener {
-            // validating if the OTP text field is empty or not.
-            if (TextUtils.isEmpty(edtOTP.getText().toString())) {
-                // if the OTP text field is empty display
-                // a message to user to enter OTP
-                Toast.makeText(this@LoginActivity, "Please enter OTP", Toast.LENGTH_SHORT).show()
-            } else {
-                // if OTP field is not empty calling
-                // method to verify the OTP.
-                verifyCode(edtOTP.getText().toString())
-            }
-        }
-    }
-
-    // below method is use to verify code from Firebase.
-    private fun verifyCode(code: String) {
-        // below line is used for getting getting
-        // credentials from our verification id and code.
-        val credential = PhoneAuthProvider.getCredential(verificationId!!, code)
-
-        // after getting credential we are
-        // calling sign in method.
-        signInWithCredential(credential)
     }
 
     private fun startVitalSignActivity() {
