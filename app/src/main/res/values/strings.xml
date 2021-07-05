@@ -27,10 +27,11 @@
     <string name="select_gender">Select gender</string>
     <string name="enter_email_address">Enter email address</string>
     <string name="enter_full_name">Enter full name</string>
-    <string name="register_sucesffuly">register successfully, you can login now.</string>
+    <string name="register_sucesffuly">Register successfully, you can login now.</string>
     <string name="opt_send">Otp send successfully</string>
     <string name="verify_otp">Verify Otp</string>
-    <string name="remember_me">remember me</string>
+    <string name="remember_me">Remember me</string>
     <string name="logout">Logout</string>
     <string name="banner_unit_id">ca-app-pub-1491257039649212/2520191012</string>
+    <string name="warning">WARNING \nThis result is not accurate as original oximeter.</string>
 </resources>
