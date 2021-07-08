@@ -31,6 +31,22 @@
           }
         },
         {
+          "client_id": "414918853946-ig529qo594o0r1d1oc7uepik4vgbvumq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.oxygenscanner",
+            "certificate_hash": "f0fdd8b45de238add2fccd5961d4f147c330b7ba"
+          }
+        },
+        {
+          "client_id": "414918853946-me6mkqi8atpggmi92l9jmj9vf5ukvik7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.oxygenscanner",
+            "certificate_hash": "61ff2dee04427a8d4670100894a23daa5e819f63"
+          }
+        },
+        {
           "client_id": "414918853946-lpb34l6no65p2v9hmtu56k78fsddq8fj.apps.googleusercontent.com",
           "client_type": 3
         }

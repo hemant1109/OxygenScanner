@@ -20,6 +20,16 @@ import java.util.*
 
 const val AD_UNIT_ID = "ca-app-pub-1491257039649212/3450129307"
 const val ADS_LENGTH_MILLISECONDS = 3000L
+/*
+* service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if
+          request.time < timestamp.date(2021, 7, 9);
+    }
+  }
+}
+* */
 
 class O2Result : AppCompatActivity() {
     private var user: String? = null
