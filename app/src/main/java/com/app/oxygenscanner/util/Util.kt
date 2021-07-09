@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.util.Log
 import android.util.Patterns
+import android.view.View
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
@@ -30,7 +31,11 @@ object Util {
         return true
     }
 
-    fun checkBlankValidationStr(string: String,radioButton: AppCompatRadioButton, str: String): Boolean {
+    fun checkBlankValidationStr(
+        string: String,
+        radioButton: AppCompatRadioButton,
+        str: String
+    ): Boolean {
         if (string.trim().isEmpty()) {
             showToast(radioButton.context, str)
             return false
@@ -43,11 +48,13 @@ object Util {
         resources: Resources,
     ): Boolean {
         if (checkBlankValidation(
-                editPhoneNumber, resources.getString(R.string.enter_mobile_number)            )
+                editPhoneNumber, resources.getString(R.string.enter_mobile_number)
+            )
         ) {
-                return checkIndiaMobileNumberValidation(
-                    editPhoneNumber,
-                    resources.getString(R.string.enter_valid_phone_number))
+            return checkIndiaMobileNumberValidation(
+                editPhoneNumber,
+                resources.getString(R.string.enter_valid_phone_number)
+            )
         }
         return false
     }
@@ -79,6 +86,7 @@ object Util {
         }
         return true
     }
+
     fun checkEmailValidation(editText: EditText, error: String): Boolean {
         if (!Patterns.EMAIL_ADDRESS.matcher(editText.text.trim().toString()).matches()) {
             showToast(editText.context, error)

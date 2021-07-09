@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -21,6 +20,8 @@ import com.app.oxygenscanner.ui.register.RegisterActivity
 import com.app.oxygenscanner.ui.startvitalsign.StartVitalSigns
 import com.app.oxygenscanner.util.Util
 import com.app.oxygenscanner.util.ViewModelFactory
+import com.app.oxygenscanner.util.hideKeyboard
+import com.app.oxygenscanner.util.showKeyboard
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -46,20 +47,9 @@ class LoginActivity : AppCompatActivity() {
     // variable for FirebaseAuth class
     private var mAuth: FirebaseAuth? = null
 
-    // variable for our text input
-    // field for phone and OTP.
-    private lateinit var edtPhone: EditText
-    private lateinit var edtOTP: EditText
-
-    // buttons for generating OTP and verifying OTP
-    private lateinit var verifyOTPBtn: Button
-    private lateinit var sendAndVerifyOtp: Button
-
-    // string for storing our verification ID
-    private var verificationId: String? = null
     private lateinit var binding: ActivityLoginBinding
     lateinit var auth: FirebaseAuth
-    var IS_LOGGED_IN = "is_logged_in"
+    private var IS_LOGGED_IN = "is_logged_in"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +86,7 @@ class LoginActivity : AppCompatActivity() {
             }
         })
         btnSendAndVerifyOtp.setOnClickListener {
+            hideKeyboard()
             if (Util.mobileValidation(edtMobileNumber, resources)) {
                 if (btnSendAndVerifyOtp.text == "Send Otp") {
                     loading.visibility = View.VISIBLE
@@ -158,10 +149,12 @@ class LoginActivity : AppCompatActivity() {
                 btnSendAndVerifyOtp.visibility = View.VISIBLE
                 if (e is FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
+                    Util.showToast(applicationContext, "Invalid Credentials. Please check.")
                 } else if (e is FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
+                    Util.showToast(applicationContext, "Too many requests. Please try later.")
                 }
-
+                showKeyboard()
                 // Show a message and update the UI
             }
 
