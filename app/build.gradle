@@ -8,7 +8,7 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('/home/hemant/AndroidStudioProjects/OxygenScanner/app/o2scanner.jks')
+            storeFile file('/home/iteamandroid/AndroidStudioProjects/OxygenScanner/app/o2scanner.jks')
             storePassword 'Zmalqp@2015'
             keyPassword 'Zmalqp@2015'
             keyAlias 'o2scanner'
@@ -22,7 +22,7 @@ android {
         applicationId "com.app.oxygenscanner"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 3
+        versionCode 5
         versionName "1."+versionCode
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -32,6 +32,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
             signingConfig signingConfigs.release
         }
     }

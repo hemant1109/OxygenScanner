@@ -18,6 +18,7 @@ import com.google.android.gms.ads.*
 
 
 class StartVitalSigns : AppCompatActivity() {
+    private var startVS: AppCompatButton? = null
     private var adView: AdView? = null
     private var user: String? = null
     private val REQUEST_CAMERA = 2
@@ -31,6 +32,7 @@ class StartVitalSigns : AppCompatActivity() {
         if (extras != null) {
             user = extras.getString("Usr")
         }
+        startVS = findViewById(R.id.StartVS)
 
         //set permission first
         val permissionCheck =
@@ -41,9 +43,10 @@ class StartVitalSigns : AppCompatActivity() {
                 arrayOf(Manifest.permission.READ_PHONE_STATE),
                 REQUEST_READ_PHONE_STATE
             )
+            startVS?.isEnabled = false
         }
-        val VS = findViewById<AppCompatButton>(R.id.StartVS)
-        VS.setOnClickListener { v: View ->
+
+        startVS?.setOnClickListener { v: View ->
             startO2ScanActivity()
         }
         adView = findViewById(R.id.adView)
@@ -133,14 +136,15 @@ class StartVitalSigns : AppCompatActivity() {
                     REQUEST_CAMERA
                 )
             //end
-
         } else if (requestCode == REQUEST_CAMERA) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //activity
-                startO2ScanActivity()
+                //startO2ScanActivity()
+                startVS?.isEnabled = true
             }
         }
     }
+
     // Called when leaving the activity
     public override fun onPause() {
         adView?.pause()
