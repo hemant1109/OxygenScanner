@@ -46,7 +46,7 @@ class StartVitalSigns : AppCompatActivity() {
             startVS?.isEnabled = false
         }
 
-        startVS?.setOnClickListener { v: View ->
+        startVS?.setOnClickListener {
             startO2ScanActivity()
         }
         adView = findViewById(R.id.adView)

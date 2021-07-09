@@ -8,7 +8,7 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('/home/iteamandroid/AndroidStudioProjects/OxygenScanner/app/o2scanner.jks')
+            storeFile file('../app/o2scanner.jks')
             storePassword 'Zmalqp@2015'
             keyPassword 'Zmalqp@2015'
             keyAlias 'o2scanner'
